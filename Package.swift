@@ -3,19 +3,20 @@
 
 import PackageDescription
 
+// swiftlint:disable all
 let package = Package(
-    name: "Spark___COMPONENT_NAME___",
+    name: "SparkSlider",
     platforms: [
         .iOS(.v15)
     ],
     products: [
         .library(
-            name: "Spark___COMPONENT_NAME___",
-            targets: ["Spark___COMPONENT_NAME___"]
+            name: "SparkSlider",
+            targets: ["SparkSlider"]
         ),
         .library(
-            name: "Spark___COMPONENT_NAME___Testing",
-            targets: ["Spark___COMPONENT_NAME___Testing"]
+            name: "SparkSliderTesting",
+            targets: ["SparkSliderTesting"]
         )
     ],
     dependencies: [
@@ -32,65 +33,69 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "Spark___COMPONENT_NAME___",
+            name: "SparkSlider",
             dependencies: [
                 .product(
                     name: "SparkCommon",
-                    package: "spm-poc-common"
+                    package: "spark-ios-common"
                 ),
                 .product(
                     name: "SparkTheming",
-                    package: "spm-poc-theming"
+                    package: "spark-ios-theming"
                 )
-            ]
+            ],
+            path: "Sources/Core"
         ),
         .target(
-            name: "Spark___COMPONENT_NAME___Testing",
+            name: "SparkSliderTesting",
             dependencies: [
-                "Spark___COMPONENT_NAME___",
+                "SparkSlider",
                 .product(
                     name: "SparkCommon",
-                    package: "spm-poc-common"
+                    package: "spark-ios-common"
                 ),
                 .product(
                     name: "SparkCommonTesting",
-                    package: "spm-poc-common"
+                    package: "spark-ios-common"
                 ),
                 .product(
                     name: "SparkThemingTesting",
-                    package: "spm-poc-theming"
+                    package: "spark-ios-theming"
                 ),
                 .product(
                     name: "SparkTheme",
-                    package: "spm-poc-theming"
+                    package: "spark-ios-theming"
                 )
-            ]
+            ],
+            path: "Sources/Testing"
         ),
         .testTarget(
-            name: "Spark___COMPONENT_NAME___UnitTests",
+            name: "SparkSliderUnitTests",
             dependencies: [
-                "Spark___COMPONENT_NAME___",
-                "Spark___COMPONENT_NAME___Testing",
+                "SparkSlider",
+                "SparkSliderTesting",
                 .product(
                     name: "SparkCommonTesting",
-                    package: "spm-poc-common"
+                    package: "spark-ios-common"
                 ),
                 .product(
                     name: "SparkThemingTesting",
-                    package: "spm-poc-theming"
+                    package: "spark-ios-theming"
                 )
-            ]
+            ],
+            path: "Tests/UnitTests"
         ),
         .testTarget(
-            name: "Spark___COMPONENT_NAME___SnapshotTests",
+            name: "SparkSliderSnapshotTests",
             dependencies: [
-                "Spark___COMPONENT_NAME___",
-                "Spark___COMPONENT_NAME___Testing",
+                "SparkSlider",
+                "SparkSliderTesting",
                 .product(
                     name: "SparkCommonSnapshotTesting",
-                    package: "spm-poc-common"
+                    package: "spark-ios-common"
                 ),
-            ]
+            ],
+            path: "Tests/SnapshotTests"
         ),
     ]
 )
