@@ -13,7 +13,7 @@ import Combine
 @_spi(SI_SPI) import SparkCommon
 @_spi(SI_SPI) import SparkCommonTesting
 import SparkTheming
-import SparkThemingTesting
+@_spi(SI_SPI) import SparkThemingTesting
 
 final class SliderViewModelTests: SliderViewModelWithMocksTests {
 
