@@ -9,7 +9,7 @@
 import XCTest
 @testable import SparkSlider
 import SparkTheming
-import SparkThemingTesting
+@_spi(SI_SPI) import SparkThemingTesting
 
 final class SliderColorsTests: XCTestCase {
 
