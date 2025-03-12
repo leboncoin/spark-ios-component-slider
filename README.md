@@ -1,64 +1,66 @@
 # Slider
-A slider is an interactive component that allows users to set values by moving a handle within a defined range.
+
+**Spark** is the [Leboncoin](https://www.leboncoin.fr/)'s _Design System_.
+
+The repository here contains only the **iOS Slider** for _SwiftUI_ and _UIKit_.
+
+You can also see all of our Spark iOS repositories on [Github](https://github.com/orgs/leboncoin/repositories?q=spark-ios+sort%3Aname-asc).
 
 ## Specifications
+
 The slider specifications on Zeroheight are [here](https://zeroheight.com/1186e1705/v/latest/p/25cceb-slider/b/03f6fc).
 
-![Figma anatomy](https://github.com/adevinta/spark-ios-component-slider/blob/main/.github/assets/anatomy.png)
+![Figma anatomy](https://github.com/leboncoin/spark-ios-component-slider/blob/main/.github/assets/anatomy.png)
 
-## Usage
-Both UIKit and SwiftUI sliders are generic and can be created with any type that conforms to: 
-* V: [BinaryFloatingPoint](https://developer.apple.com/documentation/swift/binaryfloatingpoint)
-* V.Stride: BinaryFloatingPoint
+## Technical Documentation
 
-Quick list of examples: `Float`, `CGFloat`, `Double`
+You are a developer ? A technical documentation in _DocC_ is available [here](https://leboncoin.github.io/spark-ios-component-slider/).
 
-### Properties
-* `theme`: The slider's current theme
-* `shape`: The slider's current shape (`square` or `rounded`)
-* `intent`: The slider's current intent
-* `value`: The slider’s current value
-* `range` (UIKit) / `bounds` (SwiftUI): The bounds of the slider
-* `step`: The distance between each valid value
+### Swift Package Manager
 
-### UIKit: SliderUIControl
+_Note: Instructions below are for using **SPM** without the Xcode UI. It's the easiest to go to your Project Settings -> Swift Packages and add SparkSlider from there._
+
+To integrate using Apple's Swift package manager, without Xcode integration, add the following as a dependency to your `Package.swift`:
+
 ```swift
-let slider: SliderUIControl<Float> = SliderUIControl(
-    theme: theme,
-    shape: .rounded,
-    intent: .basic
-)
+.package(url: "https://github.com/leboncoin/spark-ios-component-slider.git", .upToNextMajor(from: "1.0.0"))
 ```
 
-### SwiftUI: Slider
+and then specify `SparkSlider` as a dependency of the Target in which you wish to use the SparkSlider.
+
+Here's an example `Package.swift`:
+
 ```swift
-@State let value: Float
-...
-let slider = Slider(
-    theme: theme,
-    shape: .rounded,
-    intent: .support,
-    value: $value,
-    in: 0...0.4, // Default value `0...1`
-    onEditingChanged: { isEditing in // Default value `{ _ in }`
-        // TODO
-    })
-)
-```
-or
-```swift
-@State let value: Float
-...
-let slider = Slider(
-    theme: theme,
-    shape: .square,
-    intent: .main,
-    value: $value,
-    in: 0...10, // Default value `0...1`
-    step: 2.5, // Default value `1`
-    onEditingChanged: { isEditing in // Default value `{ _ in }`
-        // TODO
-    })
+// swift-tools-version:5.9
+import PackageDescription
+
+let package = Package(
+    name: "MyPackage",
+    platforms: [
+        .iOS(.v16)
+    ],
+    products: [
+        .library(
+            name: "MyPackage",
+            targets: ["MyPackage"]),
+    ],
+    dependencies: [
+        .package(
+            url: "https://github.com/leboncoin/spark-ios-component-slider.git",
+            .upToNextMajor(from: "1.0.0")
+        )
+    ],
+    targets: [
+        .target(
+            name: "MyPackage",
+            dependencies: [
+                .product(
+                    name: "SparkSlider",
+                    package: "spark-ios-component-slider"
+                ),
+            ]
+        )
+    ]
 )
 ```
 
@@ -67,7 +69,7 @@ let slider = Slider(
 ```
 MIT License
 
-Copyright (c) 2024 Adevinta
+Copyright (c) 2024 Leboncoin
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
