@@ -3,7 +3,7 @@
 //  SparkSliderUnitTests
 //
 //  Created by louis.borlee on 06/12/2023.
-//  Copyright © 2023 Adevinta. All rights reserved.
+//  Copyright © 2023 Leboncoin. All rights reserved.
 //
 
 import Foundation
