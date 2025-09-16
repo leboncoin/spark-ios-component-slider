@@ -1,6 +1,6 @@
 //
 //  SingleSliderViewModelTests.swift
-//  SparkSliderUnitTests
+//  SparkComponentSliderUnitTests
 //
 //  Created by louis.borlee on 03/01/2024.
 //  Copyright © 2024 Leboncoin. All rights reserved.
@@ -8,7 +8,7 @@
 
 import XCTest
 import Combine
-@testable import SparkSlider
+@testable import SparkComponentSlider
 @_spi(SI_SPI) import SparkCommonTesting
 import SparkTheming
 
@@ -270,10 +270,10 @@ final class SingleSliderPublishers: SliderPublishers {
     var value: PublisherMock<Published<Float>.Publisher>
 
     init(dim: PublisherMock<Published<CGFloat>.Publisher>,
-         trackColor: PublisherMock<Published<ColorToken>.Publisher>,
-         handleColor: PublisherMock<Published<ColorToken>.Publisher>,
-         indicatorColor: PublisherMock<Published<ColorToken>.Publisher>,
-         handleActiveIndicatorColor: PublisherMock<Published<ColorToken>.Publisher>,
+         trackColor: PublisherMock<Published<any ColorToken>.Publisher>,
+         handleColor: PublisherMock<Published<any ColorToken>.Publisher>,
+         indicatorColor: PublisherMock<Published<any ColorToken>.Publisher>,
+         handleActiveIndicatorColor: PublisherMock<Published<any ColorToken>.Publisher>,
          trackRadius: PublisherMock<Published<CGFloat>.Publisher>,
          indicatorRadius: PublisherMock<Published<CGFloat>.Publisher>,
          value: PublisherMock<Published<Float>.Publisher>) {

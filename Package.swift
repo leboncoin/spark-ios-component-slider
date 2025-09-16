@@ -5,18 +5,18 @@ import PackageDescription
 
 // swiftlint:disable all
 let package = Package(
-    name: "SparkSlider",
+    name: "SparkComponentSlider",
     platforms: [
         .iOS(.v16)
     ],
     products: [
         .library(
-            name: "SparkSlider",
-            targets: ["SparkSlider"]
+            name: "SparkComponentSlider",
+            targets: ["SparkComponentSlider"]
         ),
         .library(
-            name: "SparkSliderTesting",
-            targets: ["SparkSliderTesting"]
+            name: "SparkComponentSliderTesting",
+            targets: ["SparkComponentSliderTesting"]
         )
     ],
     dependencies: [
@@ -33,7 +33,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "SparkSlider",
+            name: "SparkComponentSlider",
             dependencies: [
                 .product(
                     name: "SparkCommon",
@@ -47,9 +47,9 @@ let package = Package(
             path: "Sources/Core"
         ),
         .target(
-            name: "SparkSliderTesting",
+            name: "SparkComponentSliderTesting",
             dependencies: [
-                "SparkSlider",
+                "SparkComponentSlider",
                 .product(
                     name: "SparkCommon",
                     package: "spark-ios-common"
@@ -70,10 +70,10 @@ let package = Package(
             path: "Sources/Testing"
         ),
         .testTarget(
-            name: "SparkSliderUnitTests",
+            name: "SparkComponentSliderUnitTests",
             dependencies: [
-                "SparkSlider",
-                "SparkSliderTesting",
+                "SparkComponentSlider",
+                "SparkComponentSliderTesting",
                 .product(
                     name: "SparkCommonTesting",
                     package: "spark-ios-common"
@@ -86,10 +86,10 @@ let package = Package(
             path: "Tests/UnitTests"
         ),
         .testTarget(
-            name: "SparkSliderSnapshotTests",
+            name: "SparkComponentSliderSnapshotTests",
             dependencies: [
-                "SparkSlider",
-                "SparkSliderTesting",
+                "SparkComponentSlider",
+                "SparkComponentSliderTesting",
                 .product(
                     name: "SparkCommonSnapshotTesting",
                     package: "spark-ios-common"

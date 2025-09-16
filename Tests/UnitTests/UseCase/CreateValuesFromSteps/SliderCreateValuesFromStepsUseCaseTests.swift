@@ -1,13 +1,13 @@
 //
 //  SliderCreateValuesFromStepsUseCaseTests.swift
-//  SparkSliderUnitTests
+//  SparkComponentSliderUnitTests
 //
 //  Created by louis.borlee on 23/11/2023.
 //  Copyright © 2023 Leboncoin. All rights reserved.
 //
 
 import XCTest
-@testable import SparkSlider
+@testable import SparkComponentSlider
 
 final class SliderCreateValuesFromStepsUseCaseTests: XCTestCase {
 

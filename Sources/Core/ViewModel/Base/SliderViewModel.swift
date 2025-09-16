@@ -1,6 +1,6 @@
 //
 //  SliderViewModel.swift
-//  SparkSlider
+//  SparkComponentSlider
 //
 //  Created by louis.borlee on 19/12/2023.
 //  Copyright © 2023 Leboncoin. All rights reserved.
@@ -12,13 +12,13 @@ import SparkTheming
 class SliderViewModel<V>: ObservableObject where V: BinaryFloatingPoint, V.Stride: BinaryFloatingPoint  {
 
     // MARK: - Private Properties
-    private let getColorsUseCase: SliderGetColorsUseCasable
-    private let getCornerRadiiUseCase: SliderGetCornerRadiiUseCasable
-    private let getStepValuesInBoundsUseCase: SliderGetStepValuesInBoundsUseCasable
-    private let getClosestValueUseCase: SliderGetClosestValueUseCasable
+    private let getColorsUseCase: any SliderGetColorsUseCasable
+    private let getCornerRadiiUseCase: any SliderGetCornerRadiiUseCasable
+    private let getStepValuesInBoundsUseCase: any SliderGetStepValuesInBoundsUseCasable
+    private let getClosestValueUseCase: any SliderGetClosestValueUseCasable
 
     // MARK: - Internal Properties
-    var theme: Theme {
+    var theme: any Theme {
         didSet {
             self.setDim()
             self.setColors()
@@ -77,13 +77,13 @@ class SliderViewModel<V>: ObservableObject where V: BinaryFloatingPoint, V.Strid
     // MARK: - Published Dim
     @Published var dim: CGFloat
 
-    required init(theme: Theme,
+    required init(theme: any Theme,
                   shape: SliderShape,
                   intent: SliderIntent,
-                  getColorsUseCase: SliderGetColorsUseCasable = SliderGetColorsUseCase(),
-                  getCornerRadiiUseCase: SliderGetCornerRadiiUseCasable = SliderGetCornerRadiiUseCase(),
-                  getStepValuesInBoundsUseCase: SliderGetStepValuesInBoundsUseCasable = SliderGetStepValuesInBoundsUseCase(),
-                  getClosestValueUseCase: SliderGetClosestValueUseCasable = SliderGetClosestValueUseCase()) {
+                  getColorsUseCase: any SliderGetColorsUseCasable = SliderGetColorsUseCase(),
+                  getCornerRadiiUseCase: any SliderGetCornerRadiiUseCasable = SliderGetCornerRadiiUseCase(),
+                  getStepValuesInBoundsUseCase: any SliderGetStepValuesInBoundsUseCasable = SliderGetStepValuesInBoundsUseCase(),
+                  getClosestValueUseCase: any SliderGetClosestValueUseCasable = SliderGetClosestValueUseCase()) {
         self.theme = theme
         self.shape = shape
         self.intent = intent

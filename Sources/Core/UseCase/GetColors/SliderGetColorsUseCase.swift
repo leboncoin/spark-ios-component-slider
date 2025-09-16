@@ -1,6 +1,6 @@
 //
 //  SliderGetColorsUseCase.swift
-//  SparkSlider
+//  SparkComponentSlider
 //
 //  Created by louis.borlee on 23/11/2023.
 //  Copyright © 2023 Leboncoin. All rights reserved.
@@ -11,12 +11,12 @@ import SparkTheming
 
 // sourcery: AutoMockable
 protocol SliderGetColorsUseCasable {
-    func execute(theme: Theme,
+    func execute(theme: any Theme,
                  intent: SliderIntent) -> SliderColors
 }
 
 final class SliderGetColorsUseCase: SliderGetColorsUseCasable {
-    func execute(theme: Theme,
+    func execute(theme: any Theme,
                  intent: SliderIntent) -> SliderColors {
         let colors = theme.colors
         let dims = theme.dims

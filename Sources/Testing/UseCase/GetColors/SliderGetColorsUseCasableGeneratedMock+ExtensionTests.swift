@@ -1,13 +1,13 @@
 //
 //  SliderGetColorsUseCasableGeneratedMock+ExtensionTests.swift
-//  SparkSliderUnitTests
+//  SparkComponentSliderUnitTests
 //
 //  Created by louis.borlee on 06/12/2023.
 //  Copyright © 2023 Leboncoin. All rights reserved.
 //
 
 import Foundation
-@testable import SparkSlider
+@testable import SparkComponentSlider
 
 extension SliderGetColorsUseCasableGeneratedMock {
     static func mocked(returnedColors colors: SliderColors) -> SliderGetColorsUseCasableGeneratedMock {

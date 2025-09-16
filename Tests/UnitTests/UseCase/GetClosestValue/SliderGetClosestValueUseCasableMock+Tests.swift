@@ -1,15 +1,15 @@
 //
 //  File.swift
-//  SparkSliderUnitTests
+//  SparkComponentSliderUnitTests
 //
 //  Created by louis.borlee on 02/01/2024.
 //  Copyright © 2024 Leboncoin. All rights reserved.
 //
 
 import Foundation
-@testable import SparkSlider
+@testable import SparkComponentSlider
 
-final class SliderGetClosestValueUseCasableMock<U>: SparkSlider.SliderGetClosestValueUseCasable where U: BinaryFloatingPoint {
+final class SliderGetClosestValueUseCasableMock<U>: SparkComponentSlider.SliderGetClosestValueUseCasable where U: BinaryFloatingPoint {
 
     // MARK: - Initialization
 

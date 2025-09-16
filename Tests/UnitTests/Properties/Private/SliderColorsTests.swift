@@ -1,20 +1,20 @@
 //
 //  SliderColorsTests.swift
-//  SparkSliderUnitTests
+//  SparkComponentSliderUnitTests
 //
 //  Created by louis.borlee on 23/11/2023.
 //  Copyright © 2023 Leboncoin. All rights reserved.
 //
 
 import XCTest
-@testable import SparkSlider
+@testable import SparkComponentSlider
 import SparkTheming
 @_spi(SI_SPI) import SparkThemingTesting
 
 final class SliderColorsTests: XCTestCase {
 
-    private let colors: Colors = ColorsGeneratedMock.mocked()
-    private let dims: Dims = DimsGeneratedMock.mocked()
+    private let colors: any Colors = ColorsGeneratedMock.mocked()
+    private let dims: any Dims = DimsGeneratedMock.mocked()
 
     func test_withOpacity() {
         // GIVEN

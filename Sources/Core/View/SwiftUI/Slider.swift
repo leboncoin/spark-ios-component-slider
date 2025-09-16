@@ -1,6 +1,6 @@
 //
 //  Slider.swift
-//  SparkSlider
+//  SparkComponentSlider
 //
 //  Created by louis.borlee on 15/12/2023.
 //  Copyright © 2023 Leboncoin. All rights reserved.
@@ -24,7 +24,7 @@ public struct Slider<V>: View where V: BinaryFloatingPoint, V.Stride: BinaryFloa
     private init(value: Binding<V>,
                  in bounds: ClosedRange<V>,
                  step: V.Stride?,
-                 theme: Theme,
+                 theme: any Theme,
                  shape: SliderShape,
                  intent: SliderIntent,
                  onEditingChanged: @escaping (Bool) -> Void = { _ in }) {
@@ -41,7 +41,7 @@ public struct Slider<V>: View where V: BinaryFloatingPoint, V.Stride: BinaryFloa
         self.onEditingChanged = onEditingChanged
     }
 
-    public init(theme: Theme,
+    public init(theme: any Theme,
                 shape: SliderShape,
                 intent: SliderIntent,
                 value: Binding<V>,
@@ -56,7 +56,7 @@ public struct Slider<V>: View where V: BinaryFloatingPoint, V.Stride: BinaryFloa
                   onEditingChanged: onEditingChanged)
     }
 
-    public init(theme: Theme,
+    public init(theme: any Theme,
                 shape: SliderShape,
                 intent: SliderIntent,
                 value: Binding<V>,
