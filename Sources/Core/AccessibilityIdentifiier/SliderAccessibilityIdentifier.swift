@@ -1,6 +1,6 @@
 //
 //  SliderAccessibilityIdentifier.swift
-//  SparkSlider
+//  SparkComponentSlider
 //
 //  Created by louis.borlee on 12.12.23.
 //  Copyright © 2023 Leboncoin. All rights reserved.

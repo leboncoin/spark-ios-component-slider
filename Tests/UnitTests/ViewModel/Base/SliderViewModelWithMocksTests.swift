@@ -1,6 +1,6 @@
 //
 //  SliderViewModelWithMocksTests.swift
-//  SparkSliderUnitTests
+//  SparkComponentSliderUnitTests
 //
 //  Created by louis.borlee on 03/01/2024.
 //  Copyright © 2024 Leboncoin. All rights reserved.
@@ -8,8 +8,8 @@
 
 import XCTest
 import Combine
-@testable import SparkSlider
-@_spi(SI_SPI) @testable import SparkSliderTesting
+@testable import SparkComponentSlider
+@_spi(SI_SPI) @testable import SparkComponentSliderTesting
 @_spi(SI_SPI) import SparkCommonTesting
 @_spi(SI_SPI) import SparkThemingTesting
 

@@ -1,13 +1,13 @@
 //
 //  SliderScenario+SnapshotTests.swift
-//  SparkSliderSnapshotTests
+//  SparkComponentSliderSnapshotTests
 //
 //  Created by louis.borlee on 14/12/2023.
 //  Copyright © 2023 Leboncoin. All rights reserved.
 //
 
 import Foundation
-@testable import SparkSlider
+@testable import SparkComponentSlider
 @_spi(SI_SPI) import SparkCommonSnapshotTesting
 
 struct SliderScenario: CustomStringConvertible {

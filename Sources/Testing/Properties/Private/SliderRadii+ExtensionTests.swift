@@ -1,13 +1,13 @@
 //
 //  SliderRadii+ExtensionTests.swift
-//  SparkSliderUnitTests
+//  SparkComponentSliderUnitTests
 //
 //  Created by louis.borlee on 08/12/2023.
 //  Copyright © 2023 Leboncoin. All rights reserved.
 //
 
 import Foundation
-@testable import SparkSlider
+@testable import SparkComponentSlider
 
 extension SliderRadii {
     static func mocked() -> SliderRadii {

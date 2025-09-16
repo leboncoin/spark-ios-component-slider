@@ -1,15 +1,15 @@
 //
 //  SliderGetStepValuesInBoundsUseCaseMock.swift
-//  SparkSliderUnitTests
+//  SparkComponentSliderUnitTests
 //
 //  Created by louis.borlee on 02/01/2024.
 //  Copyright © 2024 Leboncoin. All rights reserved.
 //
 
 import Foundation
-@testable import SparkSlider
+@testable import SparkComponentSlider
 
-final class SliderGetStepValuesInBoundsUseCasableMock<U>: SparkSlider.SliderGetStepValuesInBoundsUseCasable where U: BinaryFloatingPoint, U.Stride: BinaryFloatingPoint {
+final class SliderGetStepValuesInBoundsUseCasableMock<U>: SparkComponentSlider.SliderGetStepValuesInBoundsUseCasable where U: BinaryFloatingPoint, U.Stride: BinaryFloatingPoint {
 
     // MARK: - Initialization
 

@@ -1,6 +1,6 @@
 //
 //  SliderGetCornerRadiiUseCase.swift
-//  SparkSlider
+//  SparkComponentSlider
 //
 //  Created by louis.borlee on 23/11/2023.
 //  Copyright © 2023 Leboncoin. All rights reserved.
@@ -11,12 +11,12 @@ import SparkTheming
 
 // sourcery: AutoMockable
 protocol SliderGetCornerRadiiUseCasable {
-    func execute(theme: Theme,
+    func execute(theme: any Theme,
                  shape: SliderShape) -> SliderRadii
 }
 
 final class SliderGetCornerRadiiUseCase: SliderGetCornerRadiiUseCasable {
-    func execute(theme: Theme,
+    func execute(theme: any Theme,
                  shape: SliderShape) -> SliderRadii {
         let radius: CGFloat
         switch shape {

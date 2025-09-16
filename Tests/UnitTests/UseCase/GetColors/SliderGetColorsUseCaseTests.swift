@@ -1,23 +1,23 @@
 //
 //  SliderGetColorsUseCaseTests.swift
-//  SparkSliderUnitTests
+//  SparkComponentSliderUnitTests
 //
 //  Created by louis.borlee on 23/11/2023.
 //  Copyright © 2023 Leboncoin. All rights reserved.
 //
 
 import XCTest
-@testable import SparkSlider
+@testable import SparkComponentSlider
 import SparkTheming
 @_spi(SI_SPI) import SparkThemingTesting
 
 final class SliderGetColorsUseCaseTests: XCTestCase {
 
-    private let theme: Theme = ThemeGeneratedMock.mocked()
-    private var colors: Colors {
+    private let theme: any Theme = ThemeGeneratedMock.mocked()
+    private var colors: any Colors {
         return self.theme.colors
     }
-    private var dims: Dims {
+    private var dims: any Dims {
         return self.theme.dims
     }
 

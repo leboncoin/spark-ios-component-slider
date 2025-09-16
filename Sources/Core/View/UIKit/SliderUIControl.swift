@@ -1,6 +1,6 @@
 //
 //  SliderUIControl.swift
-//  SparkSlider
+//  SparkComponentSlider
 //
 //  Created by louis.borlee on 19/12/2023.
 //  Copyright © 2023 Leboncoin. All rights reserved.
@@ -19,7 +19,7 @@ public final class SliderUIControl<V>: UIControl where V: BinaryFloatingPoint, V
 
     // MARK: - Public properties
     /// The slider's current theme.
-    public var theme: Theme {
+    public var theme: any Theme {
         get { return self.viewModel.theme }
         set { self.viewModel.theme = newValue }
     }
@@ -134,7 +134,7 @@ public final class SliderUIControl<V>: UIControl where V: BinaryFloatingPoint, V
     ///   - shape: The slider's current shape (`square` or `rounded`)
     ///   - intent: The slider's current intent
     public convenience init(
-        theme: Theme,
+        theme: any Theme,
         shape: SliderShape,
         intent: SliderIntent
     ) {

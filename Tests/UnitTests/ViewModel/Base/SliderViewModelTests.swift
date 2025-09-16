@@ -1,6 +1,6 @@
 //
 //  SliderViewModelTests.swift
-//  SparkSliderUnitTests
+//  SparkComponentSliderUnitTests
 //
 //  Created by louis.borlee on 02/01/2024.
 //  Copyright © 2024 Leboncoin. All rights reserved.
@@ -8,8 +8,8 @@
 
 import XCTest
 import Combine
-@testable import SparkSlider
-@_spi(SI_SPI) @testable import SparkSliderTesting
+@testable import SparkComponentSlider
+@_spi(SI_SPI) @testable import SparkComponentSliderTesting
 @_spi(SI_SPI) import SparkCommon
 @_spi(SI_SPI) import SparkCommonTesting
 import SparkTheming
@@ -602,18 +602,18 @@ final class SliderViewModelTests: SliderViewModelWithMocksTests {
 class SliderPublishers {
     var cancellables = Set<AnyCancellable>()
     var dim: PublisherMock<Published<CGFloat>.Publisher>
-    var trackColor: PublisherMock<Published<ColorToken>.Publisher>
-    var handleColor: PublisherMock<Published<ColorToken>.Publisher>
-    var indicatorColor: PublisherMock<Published<ColorToken>.Publisher>
-    var handleActiveIndicatorColor: PublisherMock<Published<ColorToken>.Publisher>
+    var trackColor: PublisherMock<Published<any ColorToken>.Publisher>
+    var handleColor: PublisherMock<Published<any ColorToken>.Publisher>
+    var indicatorColor: PublisherMock<Published<any ColorToken>.Publisher>
+    var handleActiveIndicatorColor: PublisherMock<Published<any ColorToken>.Publisher>
     var trackRadius: PublisherMock<Published<CGFloat>.Publisher>
     var indicatorRadius: PublisherMock<Published<CGFloat>.Publisher>
 
     init(dim: PublisherMock<Published<CGFloat>.Publisher>,
-         trackColor: PublisherMock<Published<ColorToken>.Publisher>,
-         handleColor: PublisherMock<Published<ColorToken>.Publisher>,
-         indicatorColor: PublisherMock<Published<ColorToken>.Publisher>,
-         handleActiveIndicatorColor: PublisherMock<Published<ColorToken>.Publisher>,
+         trackColor: PublisherMock<Published<any ColorToken>.Publisher>,
+         handleColor: PublisherMock<Published<any ColorToken>.Publisher>,
+         indicatorColor: PublisherMock<Published<any ColorToken>.Publisher>,
+         handleActiveIndicatorColor: PublisherMock<Published<any ColorToken>.Publisher>,
          trackRadius: PublisherMock<Published<CGFloat>.Publisher>,
          indicatorRadius: PublisherMock<Published<CGFloat>.Publisher>) {
         self.dim = dim
