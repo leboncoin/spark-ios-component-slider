@@ -10,8 +10,9 @@ import Foundation
 @testable import SparkComponentSlider
 import SparkTheming
 
-extension SliderColors {
-    static func mocked(colors: any Colors) -> SliderColors {
+extension SliderColorsDeprecated {
+    @available(*, deprecated, message: "Remove ASAP. (21/01/2026)")
+    static func mocked(colors: any Colors) -> SliderColorsDeprecated {
         return .init(
             track: colors.feedback.alert,
             indicator: colors.accent.accentVariant,

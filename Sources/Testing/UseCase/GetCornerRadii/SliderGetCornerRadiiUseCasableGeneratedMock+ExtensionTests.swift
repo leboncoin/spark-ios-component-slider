@@ -9,9 +9,10 @@
 import Foundation
 @testable import SparkComponentSlider
 
-@_spi(SI_SPI) extension SliderGetCornerRadiiUseCasableGeneratedMock {
-    static func mocked(expectedRadii radii: SliderRadii) -> SliderGetCornerRadiiUseCasableGeneratedMock {
-        let mock = SliderGetCornerRadiiUseCasableGeneratedMock()
+@_spi(SI_SPI) extension SliderGetCornerRadiiUseCasableDeprecatedGeneratedMock {
+    @available(*, deprecated, message: "Remove ASAP. (21/01/2026)")
+    static func mocked(expectedRadii radii: SliderRadiiDeprecated) -> SliderGetCornerRadiiUseCasableDeprecatedGeneratedMock {
+        let mock = SliderGetCornerRadiiUseCasableDeprecatedGeneratedMock()
         mock._executeWithThemeAndShape = { _, _ in
             return radii
         }

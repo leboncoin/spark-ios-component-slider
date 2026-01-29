@@ -9,9 +9,10 @@
 import Foundation
 @testable import SparkComponentSlider
 
-extension SliderGetColorsUseCasableGeneratedMock {
-    static func mocked(returnedColors colors: SliderColors) -> SliderGetColorsUseCasableGeneratedMock {
-        let mock = SliderGetColorsUseCasableGeneratedMock()
+extension SliderGetColorsUseCasableDeprecatedGeneratedMock {
+    @available(*, deprecated, message: "Remove ASAP. (21/01/2026)")
+    static func mocked(returnedColors colors: SliderColorsDeprecated) -> SliderGetColorsUseCasableDeprecatedGeneratedMock {
+        let mock = SliderGetColorsUseCasableDeprecatedGeneratedMock()
         mock._executeWithThemeAndIntent = { _, _ in
             return colors
         }
