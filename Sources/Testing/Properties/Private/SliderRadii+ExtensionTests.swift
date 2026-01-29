@@ -9,8 +9,9 @@
 import Foundation
 @testable import SparkComponentSlider
 
-extension SliderRadii {
-    static func mocked() -> SliderRadii {
+extension SliderRadiiDeprecated {
+    @available(*, deprecated, message: "Remove ASAP. (21/01/2026)")
+    static func mocked() -> SliderRadiiDeprecated {
         return .init(
             trackRadius: 0.123,
             indicatorRadius: 49.3
