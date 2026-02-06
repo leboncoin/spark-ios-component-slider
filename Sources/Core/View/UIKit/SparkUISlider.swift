@@ -74,17 +74,10 @@ public final class SparkUISlider: UIControl {
         return label
     }()
 
-    /// Needed to have a space use by the ``valueLabel``.
-    private var hiddenValueLabel: UILabel = {
-        let label = UILabel()
-        label.addProperties()
-        label.alpha = .zero
-        return label
-    }()
-
     private lazy var contentStackView: UIStackView = {
         let stackView = UIStackView(
             arrangedSubviews: [
+                self.headerStackView,
                 self.hiddenValueLabel,
                 self.slider,
                 self.rangeValuesStackView
@@ -92,6 +85,38 @@ public final class SparkUISlider: UIControl {
         )
         stackView.axis = .vertical
         return stackView
+    }()
+
+    private lazy var headerStackView: SparkAdaptiveUIStackView = {
+        let stackView = SparkAdaptiveUIStackView(
+            arrangedSubviews: [
+                self.titleLabel,
+                UIView(),
+                self.valueLabel
+            ]
+        )
+        stackView.axis = .horizontal
+        stackView.isHidden = true
+        stackView.isAccessibilityElement = false
+        return stackView
+    }()
+
+    /// The UILabel that describes `bounds.lowerBound` and appears below the slider on the left.
+    ///
+    /// Please **do not set a text/attributedText** in this label but use
+    /// the ``titleText`` and ``titleAttributedText`` directly on the ``SparkUISlider``.
+    public private(set) var titleLabel: UILabel = {
+        let label = UILabel()
+        label.addProperties()
+        return label
+    }()
+
+    /// Needed to have a space use by the ``valueLabel``.
+    private var hiddenValueLabel: UILabel = {
+        let label = UILabel()
+        label.addProperties()
+        label.alpha = .zero
+        return label
     }()
 
     private let slider = SteppedSlider()
@@ -208,6 +233,16 @@ public final class SparkUISlider: UIControl {
         }
     }
 
+    /// A Boolean value indicating if the ``valueLabel`` follow the thumb.
+    /// Default is **false**.
+    public var isFloatingValueLabel: Bool = false {
+        didSet {
+            self.updateHeaderStackViewVisibility()
+            self.updateHiddenValueLabelVisibility()
+            self.updateValueLabelVisibility()
+        }
+    }
+
     /// A Boolean value indicating whether the control is in the enabled state.
     public override var isEnabled: Bool {
         didSet {
@@ -216,7 +251,31 @@ public final class SparkUISlider: UIControl {
         }
     }
 
-    /// The text value of the slider. Appears above the slider handle.
+    /// The title of the slider.
+    /// Text can be nil, in this case, no titleLabel is displayed.
+    public var titleText: String? {
+        get {
+            self.titleLabel.text
+        }
+        set {
+            self.titleLabel.text(newValue)
+            self.updateHeaderStackViewVisibility()
+        }
+    }
+
+    /// The attributedText title of the slider.
+    /// Text can be nil, in this case, no titleLabel is displayed.
+    public var attributedTitle: NSAttributedString? {
+        get {
+            self.titleLabel.attributedText
+        }
+        set {
+            self.titleLabel.attributedText(newValue)
+            self.updateHeaderStackViewVisibility()
+        }
+    }
+
+    /// The text value of the slider.
     /// Text can be nil, in this case, no valueLabel is displayed.
     public var valueText: String? {
         get {
@@ -225,11 +284,13 @@ public final class SparkUISlider: UIControl {
         set {
             self.valueLabel.text(newValue)
             self.hiddenValueLabel.text(newValue)
+            self.updateHeaderStackViewVisibility()
+            self.updateHiddenValueLabelVisibility()
             self.updateValueLabelPosition()
         }
     }
 
-    /// The attributedText value of the slider. Appears above the slider handle.
+    /// The attributedText value of the slider.
     /// Text can be nil, in this case, no valueLabel is displayed.
     public var attributedValueText: NSAttributedString? {
         get {
@@ -238,6 +299,8 @@ public final class SparkUISlider: UIControl {
         set {
             self.valueLabel.attributedText(newValue)
             self.hiddenValueLabel.attributedText(newValue)
+            self.updateHeaderStackViewVisibility()
+            self.updateHiddenValueLabelVisibility()
             self.updateValueLabelPosition()
         }
     }
@@ -354,11 +417,13 @@ public final class SparkUISlider: UIControl {
 
     func setupView() {
         // Add subviews
-        self.addSubview(self.valueLabel)
         self.addSubview(self.contentStackView)
 
         // Updates UI
         self.updateSpacing()
+        self.updateHeaderStackViewVisibility()
+        self.updateHiddenValueLabelVisibility()
+        self.updateValueLabelVisibility()
         self.updateValueLabelPosition()
 
         // Setup action
@@ -377,6 +442,7 @@ public final class SparkUISlider: UIControl {
         self.viewModel.setup(
             theme: self.theme,
             intent: self.intent,
+            isFloatingValueLabel: self.isFloatingValueLabel, 
             isEnabled: self.isEnabled
         )
     }
@@ -482,11 +548,35 @@ public final class SparkUISlider: UIControl {
 
     private func updateSpacing() {
         self.contentStackView.spacing = self.spacing
+        self.headerStackView.spacing = self.spacing
         self.rangeValuesStackView.spacing = self.spacing
     }
 
+    private func updateHeaderStackViewVisibility() {
+        self.headerStackView.isHidden = self.titleLabel.isHidden && self.valueLabel.isHidden
+    }
+
+    private func updateHiddenValueLabelVisibility() {
+        if self.isFloatingValueLabel {
+            self.hiddenValueLabel.isHidden = self.valueLabel.isHidden
+        } else {
+            self.hiddenValueLabel.isHidden = true
+        }
+    }
+
+    private func updateValueLabelVisibility() {
+        self.valueLabel.removeFromSuperview()
+
+        if self.isFloatingValueLabel {
+            self.headerStackView.removeArrangedSubview(self.valueLabel)
+            self.addSubview(self.valueLabel)
+        } else {
+            self.headerStackView.addArrangedSubview(self.valueLabel)
+        }
+    }
+
     private func updateValueLabelPosition() {
-        guard !self.valueLabel.isHidden else {
+        guard !self.valueLabel.isHidden, self.isFloatingValueLabel else {
             return
         }
 
@@ -505,6 +595,13 @@ public final class SparkUISlider: UIControl {
             x: thumbRect.midX + self.slider.frame.minX,
             y: self.hiddenValueLabel.frame.centerY
         )
+
+        // Repositioning if label is over the view limit
+        if self.valueLabel.frame.origin.x < 0 {
+            self.valueLabel.frame.origin.x = 0
+        } else if self.valueLabel.frame.maxX > self.frame.width {
+            self.valueLabel.frame.origin.x = self.frame.width - self.valueLabel.frame.width
+        }
     }
 
     private func updateRangeValuesVisibility() {
@@ -519,6 +616,7 @@ public final class SparkUISlider: UIControl {
             guard let self else { return }
 
             self.slider.tintColor(colors.tintColorToken)
+            self.titleLabel.textColor(colors.titleColorToken)
             self.valueLabel.textColor(colors.valueColorToken)
             self.minimumRangeValueLabel.textColor(colors.rangeValuesColorToken)
             self.maximumRangeValueLabel.textColor(colors.rangeValuesColorToken)
@@ -545,6 +643,7 @@ public final class SparkUISlider: UIControl {
         self.viewModel.$typographies.subscribe(in: &self.subscriptions) { [weak self] typographies in
             guard let self else { return }
 
+            self.titleLabel.font(typographies.titleFontToken)
             self.valueLabel.font(typographies.valueFontToken)
             self.hiddenValueLabel.font(typographies.valueFontToken)
             self.minimumRangeValueLabel.font(typographies.rangeValuesFontToken)
@@ -582,6 +681,8 @@ private extension UILabel {
     }
 }
 
-class SteppedSlider: UISlider {
+// MARK: - Other class
+
+private final class SteppedSlider: UISlider {
     var step: Float?
- }
+}

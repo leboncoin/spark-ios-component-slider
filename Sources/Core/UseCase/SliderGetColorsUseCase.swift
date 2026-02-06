@@ -8,6 +8,8 @@
 
 import SparkTheming
 
+// TODO: Test
+
 // sourcery: AutoMockable, AutoMockTest
 protocol SliderGetColorsUseCaseable {
     // sourcery: theme = "Identical"
@@ -40,6 +42,7 @@ struct SliderGetColorsUseCase: SliderGetColorsUseCaseable {
 
         return SliderColors(
             tintColorToken: tintColorToken,
+            titleColorToken: textColorToken,
             valueColorToken: textColorToken,
             rangeValuesColorToken: textColorToken.opacity(dims.dim1)
         )

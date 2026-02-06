@@ -40,6 +40,14 @@ final class SliderViewModel: ObservableObject {
         }
     }
 
+    var isFloatingValueLabel: Bool? {
+        didSet {
+            guard oldValue != self.isFloatingValueLabel, self.alreadyUpdateAll else { return }
+
+            self.setTypographies()
+        }
+    }
+
     var isEnabled: Bool? {
         didSet {
             guard oldValue != self.isEnabled, self.alreadyUpdateAll else { return }
@@ -78,10 +86,12 @@ final class SliderViewModel: ObservableObject {
     func setup(
         theme: any Theme,
         intent: SliderIntent,
+        isFloatingValueLabel: Bool,
         isEnabled: Bool
     ) {
         self.theme = theme
         self.intent = intent
+        self.isFloatingValueLabel = isFloatingValueLabel
         self.isEnabled = isEnabled
 
         self.setColors()
@@ -121,10 +131,11 @@ final class SliderViewModel: ObservableObject {
     }
 
     private func setTypographies() {
-        guard let theme else { return }
+        guard let theme, let isFloatingValueLabel else { return }
 
         self.typographies = self.getTypographiesUseCase.execute(
-            theme: theme
+            theme: theme,
+            isFloatingValueLabel: isFloatingValueLabel
         )
     }
 }
