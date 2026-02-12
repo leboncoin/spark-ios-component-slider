@@ -40,6 +40,7 @@ struct SliderGetColorsUseCase: SliderGetColorsUseCaseable {
 
         return SliderColors(
             tintColorToken: tintColorToken,
+            titleColorToken: textColorToken,
             valueColorToken: textColorToken,
             rangeValuesColorToken: textColorToken.opacity(dims.dim1)
         )

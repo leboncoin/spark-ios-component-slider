@@ -28,6 +28,7 @@ import Combine
 /// slider.maximumValue = 10
 /// slider.step = 1
 /// slider.isEnabled = true
+/// slider.title = "Value"
 /// slider.valueText = "Value"
 /// slider.minimumRangeValueText = "0"
 /// slider.maximumRangeValueText = "10"
@@ -41,11 +42,21 @@ import Combine
 /// This component use the native slider **accessibilityValue**'s.
 /// To override this value, you need to set a new **accessibilityValue**.
 ///
+/// By default, VoiceOver read in order :
+/// - the title
+/// - the range values (can be override. Set an **accessibilityLabel** in ``rangeValuesStackView``)
+/// - the curent value of the slider.
+///
+/// If there is not title, please add an accessibilityLabel to give some context.
+///
+/// This component use the native slider **accessibilityValue**'s.
+/// To override this value, you need to set a new **accessibilityValue**.
+///
 /// ## Rendering
 ///
 /// ### Default
 ///
-/// ![Rating rendering.](slider_default.png)
+/// ![Slider rendering.](slider_default.png)
 ///
 /// ### Value
 ///
@@ -66,11 +77,48 @@ public final class SparkUISlider: UIControl {
     /// The UILabel used to display the text appears above the slider handle.
     ///
     /// Please **do not set a text/attributedText** in this label but use
-    /// the ``valueText`` and ``valueAttributedText`` directly on the ``SparkUISlider``.
+    /// the ``valueText`` and ``attributedValueText`` directly on the ``SparkUISlider``.
     public private(set) var valueLabel: UILabel = {
         let label = UILabel()
         label.addProperties()
         label.textAlignment = .center
+        return label
+    }()
+
+    private lazy var contentStackView: UIStackView = {
+        let stackView = UIStackView(
+            arrangedSubviews: [
+                self.headerStackView,
+                self.hiddenValueLabel,
+                self.slider,
+                self.rangeValuesStackView
+            ]
+        )
+        stackView.axis = .vertical
+        return stackView
+    }()
+
+    private lazy var headerStackView: SparkAdaptiveUIStackView = {
+        let stackView = SparkAdaptiveUIStackView(
+            arrangedSubviews: [
+                self.titleLabel,
+                UIView(),
+                self.valueLabel
+            ]
+        )
+        stackView.axis = .horizontal
+        stackView.isHidden = true
+        return stackView
+    }()
+
+    /// The UILabel that describes `bounds.lowerBound` and appears below the slider on the left.
+    ///
+    /// Please **do not set a text/attributedText** in this label but use
+    /// the ``title`` and ``attributedTitle`` directly on the ``SparkUISlider``.
+    public private(set) var titleLabel: UILabel = {
+        let label = UILabel()
+        label.addProperties()
+        label.isAccessibilityElement = true
         return label
     }()
 
@@ -80,18 +128,6 @@ public final class SparkUISlider: UIControl {
         label.addProperties()
         label.alpha = .zero
         return label
-    }()
-
-    private lazy var contentStackView: UIStackView = {
-        let stackView = UIStackView(
-            arrangedSubviews: [
-                self.hiddenValueLabel,
-                self.slider,
-                self.rangeValuesStackView
-            ]
-        )
-        stackView.axis = .vertical
-        return stackView
     }()
 
     private let slider = SteppedSlider()
@@ -106,14 +142,13 @@ public final class SparkUISlider: UIControl {
         )
         stackView.axis = .horizontal
         stackView.isHidden = true
-        stackView.isAccessibilityElement = false
         return stackView
     }()
 
     /// The UILabel that describes `bounds.lowerBound` and appears below the slider on the left.
     ///
     /// Please **do not set a text/attributedText** in this label but use
-    /// the ``minimumRangeValueText`` and ``minimumRangeValueAttributedText`` directly on the ``SparkUISlider``.
+    /// the ``minimumRangeValueText`` and ``attributedMinimumRangeValueText`` directly on the ``SparkUISlider``.
     public private(set) var minimumRangeValueLabel: UILabel = {
         let label = UILabel()
         label.addProperties()
@@ -123,7 +158,7 @@ public final class SparkUISlider: UIControl {
     /// The UILabel that describes `bounds.upperBound` and appears below the slider on the right.
     ///
     /// Please **do not set a text/attributedText** in this label but use
-    /// the ``maximumRangeValueText`` and ``maximumRangeValueAttributedText`` directly on the ``SparkUISlider``.
+    /// the ``maximumRangeValueText`` and ``attributedMaximumRangeValueText`` directly on the ``SparkUISlider``.
     public private(set) var maximumRangeValueLabel: UILabel = {
         let label = UILabel()
         label.addProperties()
@@ -208,6 +243,16 @@ public final class SparkUISlider: UIControl {
         }
     }
 
+    /// A Boolean value indicating if the ``valueLabel`` follow the thumb.
+    /// Default is **false**.
+    public var isFloatingValueLabel: Bool = false {
+        didSet {
+            self.updateHeaderStackViewVisibility()
+            self.updateHiddenValueLabelVisibility()
+            self.updateValueLabelVisibility()
+        }
+    }
+
     /// A Boolean value indicating whether the control is in the enabled state.
     public override var isEnabled: Bool {
         didSet {
@@ -216,7 +261,31 @@ public final class SparkUISlider: UIControl {
         }
     }
 
-    /// The text value of the slider. Appears above the slider handle.
+    /// The title of the slider.
+    /// Text can be nil, in this case, no titleLabel is displayed.
+    public var title: String? {
+        get {
+            self.titleLabel.text
+        }
+        set {
+            self.titleLabel.text(newValue)
+            self.updateHeaderStackViewVisibility()
+        }
+    }
+
+    /// The attributedText title of the slider.
+    /// Text can be nil, in this case, no titleLabel is displayed.
+    public var attributedTitle: NSAttributedString? {
+        get {
+            self.titleLabel.attributedText
+        }
+        set {
+            self.titleLabel.attributedText(newValue)
+            self.updateHeaderStackViewVisibility()
+        }
+    }
+
+    /// The text value of the slider.
     /// Text can be nil, in this case, no valueLabel is displayed.
     public var valueText: String? {
         get {
@@ -225,11 +294,13 @@ public final class SparkUISlider: UIControl {
         set {
             self.valueLabel.text(newValue)
             self.hiddenValueLabel.text(newValue)
+            self.updateHeaderStackViewVisibility()
+            self.updateHiddenValueLabelVisibility()
             self.updateValueLabelPosition()
         }
     }
 
-    /// The attributedText value of the slider. Appears above the slider handle.
+    /// The attributedText value of the slider.
     /// Text can be nil, in this case, no valueLabel is displayed.
     public var attributedValueText: NSAttributedString? {
         get {
@@ -238,55 +309,87 @@ public final class SparkUISlider: UIControl {
         set {
             self.valueLabel.attributedText(newValue)
             self.hiddenValueLabel.attributedText(newValue)
+            self.updateHeaderStackViewVisibility()
+            self.updateHiddenValueLabelVisibility()
             self.updateValueLabelPosition()
         }
     }
 
     /// The minimum range text value of the slider. Appears below the slider on the left.
     /// Text can be nil, in this case, no minimumRangeValueLabel is displayed.
+    ///
+    /// Also update the accessibilityLabel of the parent stackview.
     public var minimumRangeValueText: String? {
         get {
             self.minimumRangeValueLabel.text
         }
         set {
             self.minimumRangeValueLabel.text(newValue)
+            self.updateRangeValuesAccessibilityLabel()
             self.updateRangeValuesVisibility()
         }
     }
 
     /// The minimum range attributedText value of the slider. Appears below the slider on the left.
     /// Text can be nil, in this case, no minimumRangeValueLabel is displayed.
+    ///
+    /// Also update the accessibilityLabel of the parent stackview.
     public var attributedMinimumRangeValueText: NSAttributedString? {
         get {
             self.minimumRangeValueLabel.attributedText
         }
         set {
             self.minimumRangeValueLabel.attributedText(newValue)
+            self.updateRangeValuesAccessibilityLabel()
             self.updateRangeValuesVisibility()
         }
     }
 
     /// The maximum range text value of the slider. Appears below the slider on the right.
     /// Text can be nil, in this case, no maximumRangeValueLabel is displayed.
+    ///
+    /// Also update the accessibilityLabel of the parent stackview.
     public var maximumRangeValueText: String? {
         get {
             self.maximumRangeValueLabel.text
         }
         set {
             self.maximumRangeValueLabel.text(newValue)
+            self.updateRangeValuesAccessibilityLabel()
             self.updateRangeValuesVisibility()
         }
     }
 
     /// The maximum range attributedText value of the slider. Appears below the slider on the right.
     /// Text can be nil, in this case, no maximumRangeValueLabel is displayed.
+    ///
+    /// Also update the accessibilityLabel of the parent stackview.
     public var attributedMaximumRangeValueText: NSAttributedString? {
         get {
             self.maximumRangeValueLabel.attributedText
         }
         set {
             self.maximumRangeValueLabel.attributedText(newValue)
+            self.updateRangeValuesAccessibilityLabel()
             self.updateRangeValuesVisibility()
+        }
+    }
+
+    public override var accessibilityLabel: String? {
+        get {
+            if let customAccessibilityLabel {
+                return customAccessibilityLabel
+            } else {
+                return [
+                    self.titleLabel.accessibilityLabel,
+                    self.rangeValuesStackView.accessibilityLabel,
+                    self.slider.accessibilityLabel
+                ].compactMap { $0 }
+                    .joined(separator: ",")
+            }
+        }
+        set {
+            self.customAccessibilityLabel = newValue
         }
     }
 
@@ -305,7 +408,8 @@ public final class SparkUISlider: UIControl {
 
     @LimitedScaledUIMetric private var spacing: CGFloat = 0
 
-    var latestStepValue: Float?
+    private var latestStepValue: Float?
+    private var customAccessibilityLabel: String?
 
     private var subscriptions = Set<AnyCancellable>()
 
@@ -354,11 +458,13 @@ public final class SparkUISlider: UIControl {
 
     func setupView() {
         // Add subviews
-        self.addSubview(self.valueLabel)
         self.addSubview(self.contentStackView)
 
         // Updates UI
         self.updateSpacing()
+        self.updateHeaderStackViewVisibility()
+        self.updateHiddenValueLabelVisibility()
+        self.updateValueLabelVisibility()
         self.updateValueLabelPosition()
 
         // Setup action
@@ -377,6 +483,7 @@ public final class SparkUISlider: UIControl {
         self.viewModel.setup(
             theme: self.theme,
             intent: self.intent,
+            isFloatingValueLabel: self.isFloatingValueLabel,
             isEnabled: self.isEnabled
         )
     }
@@ -461,9 +568,9 @@ public final class SparkUISlider: UIControl {
     // MARK: - Accessibility
 
     private func setupAccessibility() {
-        self.isAccessibilityElement = true
         self.accessibilityIdentifier = SliderAccessibilityIdentifier.view
         self.accessibilityTraits = .adjustable
+        self.isAccessibilityElement = true
     }
 
     /// Decrements the slider's value by the accessibility step.
@@ -482,11 +589,35 @@ public final class SparkUISlider: UIControl {
 
     private func updateSpacing() {
         self.contentStackView.spacing = self.spacing
+        self.headerStackView.spacing = self.spacing
         self.rangeValuesStackView.spacing = self.spacing
     }
 
+    private func updateHeaderStackViewVisibility() {
+        self.headerStackView.isHidden = self.titleLabel.isHidden && self.valueLabel.isHidden
+    }
+
+    private func updateHiddenValueLabelVisibility() {
+        if self.isFloatingValueLabel {
+            self.hiddenValueLabel.isHidden = self.valueLabel.isHidden
+        } else {
+            self.hiddenValueLabel.isHidden = true
+        }
+    }
+
+    private func updateValueLabelVisibility() {
+        self.valueLabel.removeFromSuperview()
+
+        if self.isFloatingValueLabel {
+            self.headerStackView.removeArrangedSubview(self.valueLabel)
+            self.addSubview(self.valueLabel)
+        } else {
+            self.headerStackView.addArrangedSubview(self.valueLabel)
+        }
+    }
+
     private func updateValueLabelPosition() {
-        guard !self.valueLabel.isHidden else {
+        guard !self.valueLabel.isHidden, self.isFloatingValueLabel else {
             return
         }
 
@@ -505,10 +636,29 @@ public final class SparkUISlider: UIControl {
             x: thumbRect.midX + self.slider.frame.minX,
             y: self.hiddenValueLabel.frame.centerY
         )
+
+        // Repositioning if label is over the view limit
+        if self.valueLabel.frame.origin.x < 0 {
+            self.valueLabel.frame.origin.x = 0
+        } else if self.valueLabel.frame.maxX > self.frame.width {
+            self.valueLabel.frame.origin.x = self.frame.width - self.valueLabel.frame.width
+        }
     }
 
     private func updateRangeValuesVisibility() {
         self.rangeValuesStackView.isHidden = self.minimumRangeValueLabel.isHidden && self.maximumRangeValueLabel.isHidden
+    }
+
+    private func updateRangeValuesAccessibilityLabel() {
+        guard let minText = self.minimumRangeValueLabel.text,
+              let maxText = self.maximumRangeValueLabel.text else {
+            return
+        }
+
+        self.rangeValuesStackView.accessibilityLabel = .accessibilityLabel(
+            min: minText,
+            max: maxText
+        )
     }
 
     // MARK: - Subscribe
@@ -519,6 +669,7 @@ public final class SparkUISlider: UIControl {
             guard let self else { return }
 
             self.slider.tintColor(colors.tintColorToken)
+            self.titleLabel.textColor(colors.titleColorToken)
             self.valueLabel.textColor(colors.valueColorToken)
             self.minimumRangeValueLabel.textColor(colors.rangeValuesColorToken)
             self.maximumRangeValueLabel.textColor(colors.rangeValuesColorToken)
@@ -545,6 +696,7 @@ public final class SparkUISlider: UIControl {
         self.viewModel.$typographies.subscribe(in: &self.subscriptions) { [weak self] typographies in
             guard let self else { return }
 
+            self.titleLabel.font(typographies.titleFontToken)
             self.valueLabel.font(typographies.valueFontToken)
             self.hiddenValueLabel.font(typographies.valueFontToken)
             self.minimumRangeValueLabel.font(typographies.rangeValuesFontToken)
@@ -582,6 +734,8 @@ private extension UILabel {
     }
 }
 
-class SteppedSlider: UISlider {
+// MARK: - Other class
+
+private final class SteppedSlider: UISlider {
     var step: Float?
- }
+}

@@ -1,6 +1,6 @@
 //
 //  SparkSlider.swift
-//  SparkComponentRating
+//  SparkComponentSlider
 //
 //  Created by robin.lemaire on 22/01/2026.
 //  Copyright © 2026 Leboncoin. All rights reserved.
@@ -65,6 +65,8 @@ import SwiftUI
 /// This component use some EnvironmentValues :
 /// - **theme** : ``sparkTheme(_:)`` (View extension)
 /// - **intent** : ``sparkSliderIntent(_:)`` (View extension)
+/// - **IsFloatingValue** : ``sparkSliderIsFloatingValueLabel(_:)`` (View extension)
+/// - **accessibilityRangeValuesLabel** : ``sparkSliderAccessibilityRangeValuesLabel(_:max:)`` (View extension)
 ///
 /// > If theses values are not set, default values will be applied.
 ///
@@ -72,7 +74,12 @@ import SwiftUI
 ///
 /// ## Accessibility
 ///
-/// You must set an **accessibilityLabel** to give some context.
+/// By default, VoiceOver read in order :
+/// - the title
+/// - the range values (can be override with ``sparkSliderAccessibilityRangeValuesLabel(_:max:)``)
+/// - the curent value of the slider.
+///
+/// If there is not title, please add an accessibilityLabel to give some context.
 ///
 /// This component use the native slider **accessibilityValue**'s.
 /// To override this value, you need to set a new **accessibilityValue**.
@@ -81,7 +88,11 @@ import SwiftUI
 ///
 /// ### Default
 ///
-/// ![Rating rendering.](slider_default.png)
+/// ![Slider rendering.](slider_default.png)
+///
+/// ### Title
+///
+/// ![Slider rendering.](slider_title.png)
 ///
 /// ### Value
 ///
@@ -95,13 +106,16 @@ import SwiftUI
 ///
 /// ![Slider rendering.](slider_all_values.png)
 ///
-public struct SparkSlider<ValueLabel, MinValueLabel, MaxValueLabel, Value>: View where ValueLabel: View, MinValueLabel: View, MaxValueLabel: View, Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint {
+public struct SparkSlider<TitleLabel, ValueLabel, MinValueLabel, MaxValueLabel, Value>: View where TitleLabel: View, ValueLabel: View, MinValueLabel: View, MaxValueLabel: View, Value: BinaryFloatingPoint, Value.Stride: BinaryFloatingPoint {
 
     // MARK: - Properties
 
+    private let titleLabel: () -> TitleLabel
     private let valueLabel: () -> ValueLabel
     private let minValueLabel: () -> MinValueLabel
     private let maxValueLabel: () -> MaxValueLabel
+
+    private let rangeValuesAccessibilityLabel: String?
 
     @Binding private var value: Value
     private let bounds: ClosedRange<Value>
@@ -111,11 +125,15 @@ public struct SparkSlider<ValueLabel, MinValueLabel, MaxValueLabel, Value>: View
 
     @Environment(\.theme) private var theme
     @Environment(\.sliderIntent) private var intent
+    @Environment(\.sliderIsFloatingValueLabel) private var isFloatingValueLabel
+    @Environment(\.sliderAccessibilityRangeValuesLabel) private var customRangeValuesAccessibilityLabel
     @Environment(\.isEnabled) private var isEnabled
 
     @StateObject private var viewModel = SliderViewModel()
 
-    @State private var textHeight: CGFloat = .zero
+    @State private var floatingValueLabelSize: CGSize = .zero
+    @State private var sliderHeight: CGFloat = .zero
+
     @State private var feedbackID: UUID?
 
     // MARK: - Initialization
@@ -150,16 +168,17 @@ public struct SparkSlider<ValueLabel, MinValueLabel, MaxValueLabel, Value>: View
     ///
     /// ## Rendering
     ///
-    /// ![Rating rendering.](slider_default.png)
+    /// ![Slider rendering.](slider_default.png)
     ///
     public init(
         value: Binding<Value>,
         in bounds: ClosedRange<Value> = 0...1,
         onEditingChanged: @escaping (Bool) -> Void = { _ in }
-    ) where ValueLabel == EmptyView, MinValueLabel == EmptyView, MaxValueLabel == EmptyView {
+    ) where TitleLabel == EmptyView, ValueLabel == EmptyView, MinValueLabel == EmptyView, MaxValueLabel == EmptyView {
         self.init(
             value,
             in: bounds,
+            titleLabel: { EmptyView() },
             valueLabel: { EmptyView() },
             minValueLabel: { EmptyView() },
             maxValueLabel: { EmptyView() },
@@ -200,18 +219,19 @@ public struct SparkSlider<ValueLabel, MinValueLabel, MaxValueLabel, Value>: View
     ///
     /// ## Rendering
     ///
-    /// ![Rating rendering.](slider_default.png)
+    /// ![Slider rendering.](slider_default.png)
     /// 
     public init(
         value: Binding<Value>,
         in bounds: ClosedRange<Value> = 0...1,
         step: Value.Stride,
         onEditingChanged: @escaping (Bool) -> Void = { _ in }
-    ) where ValueLabel == EmptyView, MinValueLabel == EmptyView, MaxValueLabel == EmptyView {
+    ) where TitleLabel == EmptyView, ValueLabel == EmptyView, MinValueLabel == EmptyView, MaxValueLabel == EmptyView {
         self.init(
             value,
             in: bounds,
             step: step,
+            titleLabel: { EmptyView() },
             valueLabel: { EmptyView() },
             minValueLabel: { EmptyView() },
             maxValueLabel: { EmptyView() },
@@ -225,6 +245,8 @@ public struct SparkSlider<ValueLabel, MinValueLabel, MaxValueLabel, Value>: View
         _ value: Binding<Value>,
         in bounds: ClosedRange<Value>,
         step: Value.Stride? = nil,
+        rangeValuesAccessibilityLabel: String? = nil,
+        titleLabel: @escaping () -> TitleLabel,
         valueLabel: @escaping () -> ValueLabel,
         minValueLabel: @escaping () -> MinValueLabel,
         maxValueLabel: @escaping () -> MaxValueLabel,
@@ -233,6 +255,8 @@ public struct SparkSlider<ValueLabel, MinValueLabel, MaxValueLabel, Value>: View
         self._value = value
         self.bounds = bounds
         self.step = step
+        self.rangeValuesAccessibilityLabel = rangeValuesAccessibilityLabel
+        self.titleLabel = titleLabel
         self.valueLabel = valueLabel
         self.minValueLabel = minValueLabel
         self.maxValueLabel = maxValueLabel
@@ -244,43 +268,55 @@ public struct SparkSlider<ValueLabel, MinValueLabel, MaxValueLabel, Value>: View
     public var body: some View {
         SparkVStack(alignment: .leading, spacing: self.viewModel.spacing) {
 
-            // Optional Value Label
-            if !(self.valueLabel() is EmptyView) {
-                GeometryReader { reader in
-                    self.valueLabel()
-                        .font(self.viewModel.typographies.valueFontToken)
-                        .foregroundStyle(self.viewModel.colors.valueColorToken)
-                        .frame(minWidth: SliderConstants.thumbWidth)
-                        .viewSize { newSize in
-                            self.textHeight = newSize.height
-                        }
-                        .position(
-                            x: self.valueLabelX(viewWidth: reader.size.width),
-                            y: self.textHeight / 2
-                        )
-                        .accessibilityHidden(true)
+            // Optional Header
+            if !(self.titleLabel() is EmptyView) || !(self.valueLabel() is EmptyView) {
+                SparkAdaptiveStack(spacing: self.viewModel.spacing) {
+                    self.titleLabel()
+                        .font(self.viewModel.typographies.titleFontToken)
+                        .foregroundStyle(self.viewModel.colors.titleColorToken)
+
+                    Spacer()
+
+                    // ValueLabel if no floating
+                    if !self.isFloatingValueLabel {
+                        self.valueStyledLabel()
+                    }
                 }
-                .frame(height: self.textHeight)
             }
 
-            // Native Slider
-            Group {
-                if let step {
-                    SwiftUI.Slider(
-                        value: self.$value,
-                        in: self.bounds,
-                        step: step,
-                        onEditingChanged: self.onEditingChanged
-                    )
-                } else {
-                    SwiftUI.Slider(
-                        value: self.$value,
-                        in: self.bounds,
-                        onEditingChanged: self.onEditingChanged
-                    )
+            if self.isFloatingValueLabel && !(self.valueLabel() is EmptyView) {
+                GeometryReader { geometry in
+                    ZStack(alignment: .leading) {
+
+                        // Native slider
+                        self.slider()
+                        .viewSize { newSize in
+                            self.sliderHeight = newSize.height
+                        }
+
+                        // Optional Value Label
+                        if self.isFloatingValueLabel && !(self.valueLabel() is EmptyView) {
+                            self.valueStyledLabel()
+                                .viewSize { newSize in
+                                    self.floatingValueLabelSize = newSize
+                                }
+                                .offset(
+                                    x: self.valueLabelX(
+                                        parentWidth: geometry.size.width,
+                                        labelWidth: self.floatingValueLabelSize.width
+                                    ),
+                                    y: -(self.floatingValueLabelSize.height + self.viewModel.spacing)
+                                )
+                        }
+                    }
                 }
+                .frame(height: self.sliderHeight)
+                .padding(.top, self.floatingValueLabelSize.height + self.viewModel.spacing)
+            } else {
+
+                // Native slider
+                self.slider()
             }
-            .tint(self.viewModel.colors.tintColorToken)
 
             // Optional Range Labels
             if !(self.minValueLabel() is EmptyView) || !(self.maxValueLabel() is EmptyView) {
@@ -293,7 +329,8 @@ public struct SparkSlider<ValueLabel, MinValueLabel, MaxValueLabel, Value>: View
                 }
                 .font(self.viewModel.typographies.rangeValuesFontToken)
                 .foregroundStyle(self.viewModel.colors.rangeValuesColorToken)
-                .accessibilityHidden(true)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(optional: self.customRangeValuesAccessibilityLabel ?? self.rangeValuesAccessibilityLabel)
             }
         }
         .accessibilityElement(children: .combine)
@@ -303,6 +340,7 @@ public struct SparkSlider<ValueLabel, MinValueLabel, MaxValueLabel, Value>: View
             self.viewModel.setup(
                 theme: self.theme.value,
                 intent: self.intent,
+                isFloatingValueLabel: self.isFloatingValueLabel,
                 isEnabled: self.isEnabled
             )
         }
@@ -312,8 +350,8 @@ public struct SparkSlider<ValueLabel, MinValueLabel, MaxValueLabel, Value>: View
         .onChange(of: self.intent) { intent in
             self.viewModel.intent = intent
         }
-        .onChange(of: self.intent) { intent in
-            self.viewModel.intent = intent
+        .onChange(of: self.isFloatingValueLabel) { isFloatingValueLabel in
+            self.viewModel.isFloatingValueLabel = isFloatingValueLabel
         }
         .onChange(of: self.isEnabled) { isEnabled in
             self.viewModel.isEnabled = isEnabled
@@ -325,10 +363,49 @@ public struct SparkSlider<ValueLabel, MinValueLabel, MaxValueLabel, Value>: View
         }
     }
 
+    // MARK: - Subviews
+
+    private func slider() -> some View {
+        Group {
+            if let step {
+                SwiftUI.Slider(
+                    value: self.$value,
+                    in: self.bounds,
+                    step: step,
+                    onEditingChanged: self.onEditingChanged
+                )
+            } else {
+                SwiftUI.Slider(
+                    value: self.$value,
+                    in: self.bounds,
+                    onEditingChanged: self.onEditingChanged
+                )
+            }
+        }
+        .tint(self.viewModel.colors.tintColorToken)
+    }
+
+    private func valueStyledLabel() -> some View {
+        self.valueLabel()
+            .font(self.viewModel.typographies.valueFontToken)
+            .foregroundStyle(self.viewModel.colors.valueColorToken)
+            .frame(minWidth: SliderConstants.thumbWidth)
+            .accessibilityHidden(true)
+    }
+
     // MARK: - Methods
 
-    private func valueLabelX(viewWidth: CGFloat) -> CGFloat {
-        let thumbWidth = SliderConstants.thumbWidth / 2
-        return thumbWidth + (viewWidth - thumbWidth * 2) * CGFloat(self.value / self.bounds.upperBound)
+    private func valueLabelX(parentWidth: CGFloat, labelWidth: CGFloat) -> CGFloat {
+        let thumbWidth: CGFloat = SliderConstants.thumbWidth / 2
+
+        // Calculate thumb position
+        let availableWidth = parentWidth - (thumbWidth * 2)
+        let thumbX = thumbWidth + (availableWidth * CGFloat(self.value))
+
+        // Calculate ideal label position (centered on thumb)
+        let idealLabelX = thumbX - (labelWidth / 2)
+
+        // Clamp between 0 and parentWidth - labelWidth
+        return max(0, min(idealLabelX, parentWidth - labelWidth))
     }
 }

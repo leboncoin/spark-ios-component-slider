@@ -28,11 +28,22 @@ final class SliderGetTypographiesUseCaseTests: XCTestCase {
 
     // MARK: - Tests
 
-    func test_execute_returns_correct_typographies() {
+    func test_execute_when_isFloatingValueLabel_is_false() {
         // GIVEN / WHEN
-        let result = self.sut.execute(theme: self.theme)
+        let result = self.sut.execute(theme: self.theme, isFloatingValueLabel: false)
 
         // THEN
+        XCTAssertTrue(result.titleFontToken.equals(self.theme.typography.body1))
+        XCTAssertTrue(result.valueFontToken.equals(self.theme.typography.body1Highlight))
+        XCTAssertTrue(result.rangeValuesFontToken.equals(self.theme.typography.body2))
+    }
+
+    func test_execute_when_isFloatingValueLabel_is_true() {
+        // GIVEN / WHEN
+        let result = self.sut.execute(theme: self.theme, isFloatingValueLabel: true)
+
+        // THEN
+        XCTAssertTrue(result.titleFontToken.equals(self.theme.typography.body1Highlight))
         XCTAssertTrue(result.valueFontToken.equals(self.theme.typography.body2Highlight))
         XCTAssertTrue(result.rangeValuesFontToken.equals(self.theme.typography.body2))
     }

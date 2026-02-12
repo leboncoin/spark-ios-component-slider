@@ -12,6 +12,7 @@ struct SliderTypographies: Equatable {
 
     // MARK: - Properties
 
+    var titleFontToken: any TypographyFontToken = TypographyFontTokenClear()
     var valueFontToken: any TypographyFontToken = TypographyFontTokenClear()
     var rangeValuesFontToken: any TypographyFontToken = TypographyFontTokenClear()
 }
@@ -21,12 +22,14 @@ struct SliderTypographies: Equatable {
 extension SliderTypographies {
 
     func hash(into hasher: inout Hasher) {
+        hasher.combine(self.titleFontToken)
         hasher.combine(self.valueFontToken)
         hasher.combine(self.rangeValuesFontToken)
     }
 
     static func == (lhs: SliderTypographies, rhs: SliderTypographies) -> Bool {
-        return lhs.valueFontToken.equals(rhs.valueFontToken) &&
+        return lhs.titleFontToken.equals(rhs.titleFontToken) &&
+        lhs.valueFontToken.equals(rhs.valueFontToken) &&
         lhs.rangeValuesFontToken.equals(rhs.rangeValuesFontToken)
     }
 }
