@@ -8,8 +8,6 @@
 
 import SparkTheming
 
-// TODO: Test
-
 // sourcery: AutoMockable, AutoMockTest
 protocol SliderGetTypographiesUseCaseable {
     // sourcery: theme = "Identical"
@@ -28,8 +26,6 @@ struct SliderGetTypographiesUseCase: SliderGetTypographiesUseCaseable {
         isFloatingValueLabel: Bool
     ) -> SliderTypographies {
         let typography = theme.typography
-
-        let title =  isFloatingValueLabel ? typography.body1Highlight : typography.body1
 
         return SliderTypographies(
             titleFontToken: isFloatingValueLabel ? typography.body1Highlight : typography.body1,

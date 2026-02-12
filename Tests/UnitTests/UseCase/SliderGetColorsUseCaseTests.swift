@@ -34,6 +34,8 @@ final class SliderGetColorsUseCaseTests: XCTestCase {
 
         // THEN
         XCTAssertTrue(result.tintColorToken.equals(self.theme.colors.accent.accent))
+        XCTAssertTrue(result.titleColorToken.equals(self.theme.colors.base.onSurface))
+        XCTAssertTrue(result.titleColorToken.equals(self.theme.colors.base.onSurface))
         XCTAssertTrue(result.valueColorToken.equals(self.theme.colors.base.onSurface))
         XCTAssertTrue(result.rangeValuesColorToken.equals(self.theme.colors.base.onSurface.opacity(self.theme.dims.dim1)))
     }
@@ -44,6 +46,7 @@ final class SliderGetColorsUseCaseTests: XCTestCase {
 
         // THEN
         XCTAssertTrue(result.tintColorToken.equals(self.theme.colors.basic.basic))
+        XCTAssertTrue(result.titleColorToken.equals(self.theme.colors.base.onSurface))
         XCTAssertTrue(result.valueColorToken.equals(self.theme.colors.base.onSurface))
         XCTAssertTrue(result.rangeValuesColorToken.equals(self.theme.colors.base.onSurface.opacity(self.theme.dims.dim1)))
     }
@@ -54,6 +57,7 @@ final class SliderGetColorsUseCaseTests: XCTestCase {
 
         // THEN
         XCTAssertTrue(result.tintColorToken.equals(self.theme.colors.main.main))
+        XCTAssertTrue(result.titleColorToken.equals(self.theme.colors.base.onSurface))
         XCTAssertTrue(result.valueColorToken.equals(self.theme.colors.base.onSurface))
         XCTAssertTrue(result.rangeValuesColorToken.equals(self.theme.colors.base.onSurface.opacity(self.theme.dims.dim1)))
     }
@@ -66,6 +70,7 @@ final class SliderGetColorsUseCaseTests: XCTestCase {
 
         // THEN
         XCTAssertTrue(result.tintColorToken.equals(self.theme.colors.feedback.info))
+        XCTAssertTrue(result.titleColorToken.equals(self.theme.colors.base.onSurface))
         XCTAssertTrue(result.valueColorToken.equals(self.theme.colors.base.onSurface))
         XCTAssertTrue(result.rangeValuesColorToken.equals(self.theme.colors.base.onSurface.opacity(self.theme.dims.dim1)))
     }
@@ -76,6 +81,7 @@ final class SliderGetColorsUseCaseTests: XCTestCase {
 
         // THEN
         XCTAssertTrue(result.tintColorToken.equals(self.theme.colors.feedback.neutral))
+        XCTAssertTrue(result.titleColorToken.equals(self.theme.colors.base.onSurface))
         XCTAssertTrue(result.valueColorToken.equals(self.theme.colors.base.onSurface))
         XCTAssertTrue(result.rangeValuesColorToken.equals(self.theme.colors.base.onSurface.opacity(self.theme.dims.dim1)))
     }
@@ -86,6 +92,7 @@ final class SliderGetColorsUseCaseTests: XCTestCase {
 
         // THEN
         XCTAssertTrue(result.tintColorToken.equals(self.theme.colors.support.support))
+        XCTAssertTrue(result.titleColorToken.equals(self.theme.colors.base.onSurface))
         XCTAssertTrue(result.valueColorToken.equals(self.theme.colors.base.onSurface))
         XCTAssertTrue(result.rangeValuesColorToken.equals(self.theme.colors.base.onSurface.opacity(self.theme.dims.dim1)))
     }
@@ -96,6 +103,7 @@ final class SliderGetColorsUseCaseTests: XCTestCase {
 
         // THEN
         XCTAssertTrue(result.tintColorToken.equals(self.theme.colors.feedback.alert))
+        XCTAssertTrue(result.titleColorToken.equals(self.theme.colors.base.onSurface))
         XCTAssertTrue(result.valueColorToken.equals(self.theme.colors.base.onSurface))
         XCTAssertTrue(result.rangeValuesColorToken.equals(self.theme.colors.base.onSurface.opacity(self.theme.dims.dim1)))
     }
@@ -106,6 +114,7 @@ final class SliderGetColorsUseCaseTests: XCTestCase {
 
         // THEN
         XCTAssertTrue(result.tintColorToken.equals(self.theme.colors.feedback.error))
+        XCTAssertTrue(result.titleColorToken.equals(self.theme.colors.base.onSurface))
         XCTAssertTrue(result.valueColorToken.equals(self.theme.colors.base.onSurface))
         XCTAssertTrue(result.rangeValuesColorToken.equals(self.theme.colors.base.onSurface.opacity(self.theme.dims.dim1)))
     }
@@ -116,6 +125,7 @@ final class SliderGetColorsUseCaseTests: XCTestCase {
 
         // THEN
         XCTAssertTrue(result.tintColorToken.equals(self.theme.colors.feedback.success))
+        XCTAssertTrue(result.titleColorToken.equals(self.theme.colors.base.onSurface))
         XCTAssertTrue(result.valueColorToken.equals(self.theme.colors.base.onSurface))
         XCTAssertTrue(result.rangeValuesColorToken.equals(self.theme.colors.base.onSurface.opacity(self.theme.dims.dim1)))
     }

@@ -1,6 +1,6 @@
 //
 //  SparkSlider+InitStringExtension.swift
-//  SparkComponentRating
+//  SparkComponentSlider
 //
 //  Created by robin.lemaire on 22/01/2026.
 //  Copyright © 2026 Leboncoin. All rights reserved.
@@ -42,7 +42,7 @@ public extension SparkSlider {
     ///
     /// ## Rendering
     ///
-    /// ![Rating rendering.](slider_title.png)
+    /// ![Slider rendering.](slider_title.png)
     ///
     init(
         value: Binding<Value>,
@@ -90,7 +90,7 @@ public extension SparkSlider {
     ///
     /// ## Rendering
     ///
-    /// ![Rating rendering.](slider_value.png)
+    /// ![Slider rendering.](slider_value.png)
     ///
     init(
         value: Binding<Value>,
@@ -140,7 +140,7 @@ public extension SparkSlider {
     ///
     /// ## Rendering
     ///
-    /// ![Rating rendering.](slider_value.png)
+    /// ![Slider rendering.](slider_title_and_value.png)
     ///
     init(
         value: Binding<Value>,
@@ -191,7 +191,7 @@ public extension SparkSlider {
     ///
     /// ## Rendering
     ///
-    /// ![Rating rendering.](slider_range_values.png)
+    /// ![Slider rendering.](slider_range_values.png)
     ///
     init(
         value: Binding<Value>,
@@ -203,6 +203,7 @@ public extension SparkSlider {
         self.init(
             value,
             in: bounds,
+            rangeValuesAccessibilityLabel: .accessibilityLabel(min: minValueText, max: maxValueText),
             titleLabel: { EmptyView() },
             valueLabel: { EmptyView() },
             minValueLabel: { Text(minValueText) },
@@ -244,7 +245,7 @@ public extension SparkSlider {
     ///
     /// ## Rendering
     ///
-    /// ![Rating rendering.](slider_range_values.png)
+    /// ![Slider rendering.](slider_title_and_range_values.png)
     ///
     init(
         value: Binding<Value>,
@@ -257,6 +258,7 @@ public extension SparkSlider {
         self.init(
             value,
             in: bounds,
+            rangeValuesAccessibilityLabel: .accessibilityLabel(min: minValueText, max: maxValueText),
             titleLabel: { Text(title) },
             valueLabel: { EmptyView() },
             minValueLabel: { Text(minValueText) },
@@ -298,7 +300,7 @@ public extension SparkSlider {
     ///
     /// ## Rendering
     ///
-    /// ![Rating rendering.](slider_all_values.png)
+    /// ![Slider rendering.](slider_value_and_range_values.png)
     ///
     init(
         value: Binding<Value>,
@@ -311,6 +313,7 @@ public extension SparkSlider {
             self.init(
                 value,
                 in: bounds,
+                rangeValuesAccessibilityLabel: .accessibilityLabel(min: minValueText, max: maxValueText),
                 titleLabel: { EmptyView() },
                 valueLabel: { Text(valueText) },
                 minValueLabel: { Text(minValueText) },
@@ -354,7 +357,7 @@ public extension SparkSlider {
     ///
     /// ## Rendering
     ///
-    /// ![Rating rendering.](slider_all_values.png)
+    /// ![Slider rendering.](slider_all_values.png)
     ///
     init(
         value: Binding<Value>,
@@ -368,6 +371,7 @@ public extension SparkSlider {
             self.init(
                 value,
                 in: bounds,
+                rangeValuesAccessibilityLabel: .accessibilityLabel(min: minValueText, max: maxValueText),
                 titleLabel: { Text(title) },
                 valueLabel: { Text(valueText) },
                 minValueLabel: { Text(minValueText) },
@@ -410,7 +414,7 @@ public extension SparkSlider {
     ///
     /// ## Rendering
     ///
-    /// ![Rating rendering.](slider_value.png)
+    /// ![Slider rendering.](slider_title.png)
     ///
     init(
         value: Binding<Value>,
@@ -463,7 +467,7 @@ public extension SparkSlider {
     ///
     /// ## Rendering
     ///
-    /// ![Rating rendering.](slider_value.png)
+    /// ![Slider rendering.](slider_value.png)
     ///
     init(
         value: Binding<Value>,
@@ -518,7 +522,7 @@ public extension SparkSlider {
     ///
     /// ## Rendering
     ///
-    /// ![Rating rendering.](slider_value.png)
+    /// ![Slider rendering.](slider_title_and_value.png)
     ///
     init(
         value: Binding<Value>,
@@ -574,7 +578,7 @@ public extension SparkSlider {
     ///
     /// ## Rendering
     ///
-    /// ![Rating rendering.](slider_range_values.png)
+    /// ![Slider rendering.](slider_range_values.png)
     ///
     init(
         value: Binding<Value>,
@@ -588,6 +592,7 @@ public extension SparkSlider {
             value,
             in: bounds,
             step: step,
+            rangeValuesAccessibilityLabel: .accessibilityLabel(min: minValueText, max: maxValueText),
             titleLabel: { EmptyView() },
             valueLabel: { EmptyView() },
             minValueLabel: { Text(minValueText) },
@@ -632,7 +637,7 @@ public extension SparkSlider {
     ///
     /// ## Rendering
     ///
-    /// ![Rating rendering.](slider_range_values.png)
+    /// ![Slider rendering.](slider_title_and_range_values.png)
     ///
     init(
         value: Binding<Value>,
@@ -647,6 +652,7 @@ public extension SparkSlider {
             value,
             in: bounds,
             step: step,
+            rangeValuesAccessibilityLabel: .accessibilityLabel(min: minValueText, max: maxValueText),
             titleLabel: { Text(title) },
             valueLabel: { EmptyView() },
             minValueLabel: { Text(minValueText) },
@@ -691,7 +697,7 @@ public extension SparkSlider {
     ///
     /// ## Rendering
     ///
-    /// ![Rating rendering.](slider_all_values.png)
+    /// ![Slider rendering.](slider_value_and_range_values.png)
     ///
     init(
         value: Binding<Value>,
@@ -706,6 +712,7 @@ public extension SparkSlider {
             value,
             in: bounds,
             step: step,
+            rangeValuesAccessibilityLabel: .accessibilityLabel(min: minValueText, max: maxValueText),
             titleLabel: { EmptyView() },
             valueLabel: { Text(valueText) },
             minValueLabel: { Text(minValueText) },
@@ -752,7 +759,7 @@ public extension SparkSlider {
     ///
     /// ## Rendering
     ///
-    /// ![Rating rendering.](slider_all_values.png)
+    /// ![Slider rendering.](slider_all_values.png)
     ///
     init(
         value: Binding<Value>,
@@ -768,6 +775,7 @@ public extension SparkSlider {
             value,
             in: bounds,
             step: step,
+            rangeValuesAccessibilityLabel: .accessibilityLabel(min: minValueText, max: maxValueText),
             titleLabel: { Text(title) },
             valueLabel: { Text(valueText) },
             minValueLabel: { Text(minValueText) },

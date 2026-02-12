@@ -22,6 +22,7 @@ final class SliderColorsTests: XCTestCase {
 
         // THEN
         XCTAssertTrue(colors.tintColorToken.equals(ColorTokenClear()))
+        XCTAssertTrue(colors.titleColorToken.equals(ColorTokenClear()))
         XCTAssertTrue(colors.valueColorToken.equals(ColorTokenClear()))
         XCTAssertTrue(colors.rangeValuesColorToken.equals(ColorTokenClear()))
     }
@@ -29,17 +30,20 @@ final class SliderColorsTests: XCTestCase {
     func test_equality_when_same_colors() {
         // GIVEN / WHEN
         let tintToken = ColorTokenGeneratedMock.random()
+        let titleToken = ColorTokenGeneratedMock.random()
         let valueToken = ColorTokenGeneratedMock.random()
         let rangeValuesToken = ColorTokenGeneratedMock.random()
 
         let colors1 = SliderColors(
             tintColorToken: tintToken,
+            titleColorToken: titleToken,
             valueColorToken: valueToken,
             rangeValuesColorToken: rangeValuesToken
         )
 
         let colors2 = SliderColors(
             tintColorToken: tintToken,
+            titleColorToken: titleToken,
             valueColorToken: valueToken,
             rangeValuesColorToken: rangeValuesToken
         )
@@ -52,17 +56,46 @@ final class SliderColorsTests: XCTestCase {
         // GIVEN / WHEN
         let tintToken1 = ColorTokenGeneratedMock.random()
         let tintToken2 = ColorTokenGeneratedMock.random()
+        let titleToken = ColorTokenGeneratedMock.random()
         let valueToken = ColorTokenGeneratedMock.random()
         let rangeValuesToken = ColorTokenGeneratedMock.random()
 
         let colors1 = SliderColors(
             tintColorToken: tintToken1,
+            titleColorToken: titleToken,
             valueColorToken: valueToken,
             rangeValuesColorToken: rangeValuesToken
         )
 
         let colors2 = SliderColors(
             tintColorToken: tintToken2,
+            titleColorToken: titleToken,
+            valueColorToken: valueToken,
+            rangeValuesColorToken: rangeValuesToken
+        )
+
+        // THEN
+        XCTAssertNotEqual(colors1, colors2)
+    }
+
+    func test_inequality_when_different_title_colors() {
+        // GIVEN / WHEN
+        let tintToken = ColorTokenGeneratedMock.random()
+        let titleToken1 = ColorTokenGeneratedMock.random()
+        let titleToken2 = ColorTokenGeneratedMock.random()
+        let valueToken = ColorTokenGeneratedMock.random()
+        let rangeValuesToken = ColorTokenGeneratedMock.random()
+
+        let colors1 = SliderColors(
+            tintColorToken: tintToken,
+            titleColorToken: titleToken1,
+            valueColorToken: valueToken,
+            rangeValuesColorToken: rangeValuesToken
+        )
+
+        let colors2 = SliderColors(
+            tintColorToken: tintToken,
+            titleColorToken: titleToken2,
             valueColorToken: valueToken,
             rangeValuesColorToken: rangeValuesToken
         )
@@ -74,18 +107,21 @@ final class SliderColorsTests: XCTestCase {
     func test_inequality_when_different_value_colors() {
         // GIVEN / WHEN
         let tintToken = ColorTokenGeneratedMock.random()
+        let titleToken = ColorTokenGeneratedMock.random()
         let valueToken1 = ColorTokenGeneratedMock.random()
         let valueToken2 = ColorTokenGeneratedMock.random()
         let rangeValuesToken = ColorTokenGeneratedMock.random()
 
         let colors1 = SliderColors(
             tintColorToken: tintToken,
+            titleColorToken: titleToken,
             valueColorToken: valueToken1,
             rangeValuesColorToken: rangeValuesToken
         )
 
         let colors2 = SliderColors(
             tintColorToken: tintToken,
+            titleColorToken: titleToken,
             valueColorToken: valueToken2,
             rangeValuesColorToken: rangeValuesToken
         )
@@ -97,18 +133,21 @@ final class SliderColorsTests: XCTestCase {
     func test_inequality_when_different_rangeValues_colors() {
         // GIVEN / WHEN
         let tintToken = ColorTokenGeneratedMock.random()
+        let titleToken = ColorTokenGeneratedMock.random()
         let valueToken = ColorTokenGeneratedMock.random()
         let rangeValuesToken1 = ColorTokenGeneratedMock.random()
         let rangeValuesToken2 = ColorTokenGeneratedMock.random()
 
         let colors1 = SliderColors(
             tintColorToken: tintToken,
+            titleColorToken: titleToken,
             valueColorToken: valueToken,
             rangeValuesColorToken: rangeValuesToken1
         )
 
         let colors2 = SliderColors(
             tintColorToken: tintToken,
+            titleColorToken: titleToken,
             valueColorToken: valueToken,
             rangeValuesColorToken: rangeValuesToken2
         )
@@ -120,11 +159,13 @@ final class SliderColorsTests: XCTestCase {
     func test_hash_consistency() {
         // GIVEN / WHEN
         let tintToken = ColorTokenGeneratedMock.random()
+        let titleToken = ColorTokenGeneratedMock.random()
         let valueToken = ColorTokenGeneratedMock.random()
         let rangeValuesToken = ColorTokenGeneratedMock.random()
 
         let colors = SliderColors(
             tintColorToken: tintToken,
+            titleColorToken: titleToken,
             valueColorToken: valueToken,
             rangeValuesColorToken: rangeValuesToken
         )

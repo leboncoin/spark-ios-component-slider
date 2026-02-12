@@ -67,48 +67,107 @@ final class SparkUISliderSnapshotTests: UIKitComponentSnapshotTestCase {
         slider.minimumValue = 0
         slider.maximumValue = 1
         slider.step = configuration.step ? 0.25 : nil
+        slider.isFloatingValueLabel = configuration.isFloatingValue
 
         // Configure content based on configuration
-        switch configuration.content {
-        case .withoutValues:
+        let title = "Title"
+        let valueText = "50%"
+        let minText = "Min"
+        let maxText = "Max"
+
+        switch (configuration.content, configuration.contentType) {
+        case (.none, _):
             break
 
-        case .value:
-            slider.valueText = "Value"
+            // Title only
 
-        case .otherValue:
-            slider.attributedValueText = self.createAttributedText(value: 50)
+        case (.title, .text):
+            slider.title = title
 
-        case .rangeValues:
-            slider.minimumRangeValueText = "Min"
-            slider.maximumRangeValueText = "Max"
+        case (.title, .custom):
+            slider.attributedTitle = .mock(title)
 
-        case .otherRangeValues:
-            slider.attributedMinimumRangeValueText = self.createAttributedText(value: 0)
-            slider.attributedMaximumRangeValueText = self.createAttributedText(value: 100)
+            // Value only
 
-        case .allValues:
-            slider.valueText = "Current"
-            slider.minimumRangeValueText = "Min"
-            slider.maximumRangeValueText = "Max"
+        case (.value, .text):
+            slider.valueText = valueText
 
-        case .otherAllValues:
-            slider.attributedValueText = self.createAttributedText(value: 50)
-            slider.attributedMinimumRangeValueText = self.createAttributedText(value: 0)
-            slider.attributedMaximumRangeValueText = self.createAttributedText(value: 100)
+        case (.value, .custom):
+            slider.attributedValueText = .mock(valueText)
+
+            // Range values
+
+        case (.rangeValues, .text):
+            slider.minimumRangeValueText = minText
+            slider.maximumRangeValueText = maxText
+
+        case (.rangeValues, .custom):
+            slider.attributedMinimumRangeValueText = .mock(minText)
+            slider.attributedMaximumRangeValueText = .mock(maxText)
+
+            // Title & Value
+
+        case (.titleAndValue, .text):
+            slider.title = title
+            slider.valueText = valueText
+
+        case (.titleAndValue, .custom):
+            slider.attributedTitle = .mock(title)
+            slider.attributedValueText = .mock(valueText)
+
+            // Title & Range values
+
+        case (.titleAndRangeValues, .text):
+            slider.title = title
+            slider.minimumRangeValueText = minText
+            slider.maximumRangeValueText = maxText
+
+        case (.titleAndRangeValues, .custom):
+            slider.attributedTitle = .mock(title)
+            slider.attributedMinimumRangeValueText = .mock(minText)
+            slider.attributedMaximumRangeValueText = .mock(maxText)
+
+            // Value & Range values
+
+        case (.valueAndRangeValues, .text):
+            slider.valueText = valueText
+            slider.minimumRangeValueText = minText
+            slider.maximumRangeValueText = maxText
+
+        case (.valueAndRangeValues, .custom):
+            slider.attributedValueText = .mock(valueText)
+            slider.attributedMinimumRangeValueText = .mock(minText)
+            slider.attributedMaximumRangeValueText = .mock(maxText)
+
+            // All values
+
+        case (.allValues, .text):
+            slider.title = title
+            slider.valueText = valueText
+            slider.minimumRangeValueText = minText
+            slider.maximumRangeValueText = maxText
+
+        case (.allValues, .custom):
+            slider.attributedTitle = .mock(title)
+            slider.attributedValueText = .mock(valueText)
+            slider.attributedMinimumRangeValueText = .mock(minText)
+            slider.attributedMaximumRangeValueText = .mock(maxText)
         }
 
         return slider
     }
+}
 
-    // MARK: - Helper
+// MARK: - Extension
 
-    private func createAttributedText(value: Int) -> NSAttributedString {
+private extension NSAttributedString {
+
+    static func mock(_ text: String) -> NSMutableAttributedString {
         let attributedString = NSMutableAttributedString()
 
         // Add value text
         let valueString = NSAttributedString(
-            string: "\(value)",
+            string: text,
             attributes: [
                 .font: UIFont.systemFont(ofSize: 14)
             ]
@@ -117,7 +176,7 @@ final class SparkUISliderSnapshotTests: UIKitComponentSnapshotTestCase {
 
         // Add percent symbol in bold and blue
         let percentString = NSAttributedString(
-            string: "%",
+            string: "(%)",
             attributes: [
                 .font: UIFont.boldSystemFont(ofSize: 14),
                 .foregroundColor: UIColor.systemBlue

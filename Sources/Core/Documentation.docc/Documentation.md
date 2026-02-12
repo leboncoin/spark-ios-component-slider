@@ -26,6 +26,10 @@ To override this value, you need to set a new **accessibilityValue**.
 
 ![Slider rendering.](slider_default.png)
 
+- Title
+
+![Slider rendering.](slider_title.png)
+
 - Value
 
 ![Slider rendering.](slider_value.png)
@@ -37,6 +41,7 @@ To override this value, you need to set a new **accessibilityValue**.
 - All Values
 
 ![Slider rendering.](slider_all_values.png)
+
 
 ### Resources
 

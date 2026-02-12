@@ -6,8 +6,6 @@
 //  Copyright © 2026 Leboncoin. All rights reserved.
 //
 
-// TODO: Tests
-
 @_spi(SI_SPI) import SparkTheming
 
 struct SliderColors: Equatable {

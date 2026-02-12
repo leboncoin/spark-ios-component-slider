@@ -1,6 +1,6 @@
 //
 //  SparkSlider.swift
-//  SparkComponentRating
+//  SparkComponentSlider
 //
 //  Created by robin.lemaire on 22/01/2026.
 //  Copyright © 2026 Leboncoin. All rights reserved.
@@ -8,8 +8,6 @@
 
 import SwiftUI
 @_spi(SI_SPI) import SparkCommon
-
-// TODO: Recheck A11Y
 
 /// The slider is an interactive component that allows users to set values by moving a handle within a defined range.
 ///
@@ -67,6 +65,8 @@ import SwiftUI
 /// This component use some EnvironmentValues :
 /// - **theme** : ``sparkTheme(_:)`` (View extension)
 /// - **intent** : ``sparkSliderIntent(_:)`` (View extension)
+/// - **IsFloatingValue** : ``sparkSliderIsFloatingValueLabel(_:)`` (View extension)
+/// - **accessibilityRangeValuesLabel** : ``sparkSliderAccessibilityRangeValuesLabel(_:max:)`` (View extension)
 ///
 /// > If theses values are not set, default values will be applied.
 ///
@@ -74,7 +74,12 @@ import SwiftUI
 ///
 /// ## Accessibility
 ///
-/// You must set an **accessibilityLabel** to give some context.
+/// By default, VoiceOver read in order :
+/// - the title
+/// - the range values (can be override with ``sparkSliderAccessibilityRangeValuesLabel(_:max:)``)
+/// - the curent value of the slider.
+///
+/// If there is not title, please add an accessibilityLabel to give some context.
 ///
 /// This component use the native slider **accessibilityValue**'s.
 /// To override this value, you need to set a new **accessibilityValue**.
@@ -83,7 +88,11 @@ import SwiftUI
 ///
 /// ### Default
 ///
-/// ![Rating rendering.](slider_default.png)
+/// ![Slider rendering.](slider_default.png)
+///
+/// ### Title
+///
+/// ![Slider rendering.](slider_title.png)
 ///
 /// ### Value
 ///
@@ -106,6 +115,8 @@ public struct SparkSlider<TitleLabel, ValueLabel, MinValueLabel, MaxValueLabel, 
     private let minValueLabel: () -> MinValueLabel
     private let maxValueLabel: () -> MaxValueLabel
 
+    private let rangeValuesAccessibilityLabel: String?
+
     @Binding private var value: Value
     private let bounds: ClosedRange<Value>
     private let step: Value.Stride?
@@ -115,6 +126,7 @@ public struct SparkSlider<TitleLabel, ValueLabel, MinValueLabel, MaxValueLabel, 
     @Environment(\.theme) private var theme
     @Environment(\.sliderIntent) private var intent
     @Environment(\.sliderIsFloatingValueLabel) private var isFloatingValueLabel
+    @Environment(\.sliderAccessibilityRangeValuesLabel) private var customRangeValuesAccessibilityLabel
     @Environment(\.isEnabled) private var isEnabled
 
     @StateObject private var viewModel = SliderViewModel()
@@ -156,7 +168,7 @@ public struct SparkSlider<TitleLabel, ValueLabel, MinValueLabel, MaxValueLabel, 
     ///
     /// ## Rendering
     ///
-    /// ![Rating rendering.](slider_default.png)
+    /// ![Slider rendering.](slider_default.png)
     ///
     public init(
         value: Binding<Value>,
@@ -207,7 +219,7 @@ public struct SparkSlider<TitleLabel, ValueLabel, MinValueLabel, MaxValueLabel, 
     ///
     /// ## Rendering
     ///
-    /// ![Rating rendering.](slider_default.png)
+    /// ![Slider rendering.](slider_default.png)
     /// 
     public init(
         value: Binding<Value>,
@@ -233,6 +245,7 @@ public struct SparkSlider<TitleLabel, ValueLabel, MinValueLabel, MaxValueLabel, 
         _ value: Binding<Value>,
         in bounds: ClosedRange<Value>,
         step: Value.Stride? = nil,
+        rangeValuesAccessibilityLabel: String? = nil,
         titleLabel: @escaping () -> TitleLabel,
         valueLabel: @escaping () -> ValueLabel,
         minValueLabel: @escaping () -> MinValueLabel,
@@ -242,6 +255,7 @@ public struct SparkSlider<TitleLabel, ValueLabel, MinValueLabel, MaxValueLabel, 
         self._value = value
         self.bounds = bounds
         self.step = step
+        self.rangeValuesAccessibilityLabel = rangeValuesAccessibilityLabel
         self.titleLabel = titleLabel
         self.valueLabel = valueLabel
         self.minValueLabel = minValueLabel
@@ -256,11 +270,10 @@ public struct SparkSlider<TitleLabel, ValueLabel, MinValueLabel, MaxValueLabel, 
 
             // Optional Header
             if !(self.titleLabel() is EmptyView) || !(self.valueLabel() is EmptyView) {
-                SparkHStack(spacing: self.viewModel.spacing) {
+                SparkAdaptiveStack(spacing: self.viewModel.spacing) {
                     self.titleLabel()
                         .font(self.viewModel.typographies.titleFontToken)
                         .foregroundStyle(self.viewModel.colors.titleColorToken)
-                        .accessibilityHidden(true)
 
                     Spacer()
 
@@ -316,7 +329,8 @@ public struct SparkSlider<TitleLabel, ValueLabel, MinValueLabel, MaxValueLabel, 
                 }
                 .font(self.viewModel.typographies.rangeValuesFontToken)
                 .foregroundStyle(self.viewModel.colors.rangeValuesColorToken)
-                .accessibilityHidden(true)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(optional: self.customRangeValuesAccessibilityLabel ?? self.rangeValuesAccessibilityLabel)
             }
         }
         .accessibilityElement(children: .combine)

@@ -19,6 +19,8 @@ struct SliderConfigurationSnapshotTests {
 
     var intent: SliderIntent = .default
     var content: SliderContent = .default
+    var contentType: SliderContentType = .default
+    var isFloatingValue: Bool = false
     var step: Bool = false
 
     var modes: [ComponentSnapshotTestMode] = ComponentSnapshotTestConstants.Modes.default
@@ -33,7 +35,9 @@ struct SliderConfigurationSnapshotTests {
 
         return [
             "\(self.intent)" + "Intent",
+            "\(self.contentType)" + "ContentType",
             "\(self.content)" + "Content",
+            self.isFloatingValue ? "IsFloatingValue" : nil,
             self.step ? "withStep" : nil
         ]
             .compactMap { $0 }
@@ -54,22 +58,34 @@ struct SliderConfigurationSnapshotTests {
 // MARK: - Enum
 
 enum SliderContent: String, CaseIterable {
-    case withoutValues
+    case none
+    case title
     case value
-    case otherValue
     case rangeValues
-    case otherRangeValues
+    case titleAndValue
+    case titleAndRangeValues
+    case valueAndRangeValues
     case allValues
-    case otherAllValues
 
-    static var `default` = Self.withoutValues
+    static var `default` = Self.none
 
     var documentationName: String? {
         switch self {
+        case .none: nil
+        case .title: "title"
         case .value: "value"
         case .rangeValues: "range_values"
+        case .titleAndValue: "title_and_value"
+        case .titleAndRangeValues: "title_and_range_values"
+        case .valueAndRangeValues: "value_and_range_values"
         case .allValues: "all_values"
-        default: nil
         }
     }
+}
+
+enum SliderContentType: String, CaseIterable {
+    case text
+    case custom
+
+    static var `default` = Self.text
 }

@@ -29,7 +29,7 @@ final class SparkSliderSnapshotTests: SwiftUIComponentSnapshotTestCase {
         let scenarios = SliderScenarioSnapshotTests.allCases
 
         for scenario in scenarios {
-            let configurations = scenario.configuration()
+            let configurations = scenario.configuration(isSwiftUIComponent: true)
 
             for configuration in configurations {
                 let view = self.component(configuration: configuration)
@@ -39,7 +39,6 @@ final class SparkSliderSnapshotTests: SwiftUIComponentSnapshotTestCase {
                     .padding(.vertical, 20)
                     .background(.background)
                     .frame(width: 300)
-//                    .fixedSize()
 
                 self.assertSnapshot(
                     matching: view,
@@ -58,161 +57,472 @@ final class SparkSliderSnapshotTests: SwiftUIComponentSnapshotTestCase {
         let step: Double? = configuration.step ? 0.25 : nil
 
         switch configuration.content {
-        case .withoutValues:
-            if let step {
-                SparkSlider(
-                    value: self.$value,
-                    in: 0...1,
-                    step: step
-                )
-            } else {
-                SparkSlider(
-                    value: self.$value,
-                    in: 0...1
-                )
-            }
+        case .none:
+            self.componentWithoutValues(
+                configuration: configuration,
+                step: step
+            )
+
+        case .title:
+            self.componentWithTitle(
+                configuration: configuration,
+                step: step
+            )
 
         case .value:
-            if let step {
-                SparkSlider(
-                    value: self.$value,
-                    in: 0...1,
-                    step: step,
-                    valueText: "Value"
-                )
-            } else {
-                SparkSlider(
-                    value: self.$value,
-                    in: 0...1,
-                    valueText: "Value"
-                )
-            }
-
-        case .otherValue:
-            if let step {
-                SparkSlider(
-                    value: self.$value,
-                    in: 0...1,
-                    step: step,
-                    valueLabel: {
-                        OtherContentView(value: self.value)
-                    }
-                )
-            } else {
-                SparkSlider(
-                    value: self.$value,
-                    in: 0...1,
-                    valueLabel: {
-                        OtherContentView(value: self.value)
-                    }
-                )
-            }
+            self.componentWithValue(
+                configuration: configuration,
+                step: step
+            )
 
         case .rangeValues:
-            if let step {
-                SparkSlider(
-                    value: self.$value,
-                    in: 0...1,
-                    step: step,
-                    minValueText: "Min",
-                    maxValueText: "Max"
-                )
-            } else {
-                SparkSlider(
-                    value: self.$value,
-                    in: 0...1,
-                    minValueText: "Min",
-                    maxValueText: "Max"
-                )
-            }
+            self.componentWithRangeValues(
+                configuration: configuration,
+                step: step
+            )
 
-        case .otherRangeValues:
-            if let step {
-                SparkSlider(
-                    value: self.$value,
-                    in: 0...1,
-                    step: step,
-                    minValueLabel: {
-                        OtherContentView(value: 0)
-                    },
-                    maxValueLabel: {
-                        OtherContentView(value: 100)
-                    }
-                )
-            } else {
-                SparkSlider(
-                    value: self.$value,
-                    in: 0...1,
-                    minValueLabel: {
-                        OtherContentView(value: 0)
-                    },
-                    maxValueLabel: {
-                        OtherContentView(value: 100)
-                    }
-                )
-            }
+        case .titleAndValue:
+            self.componentWithTitleAndValue(
+                configuration: configuration,
+                step: step
+            )
+
+        case .titleAndRangeValues:
+            self.componentWithTitleAndRangeValues(
+                configuration: configuration,
+                step: step
+            )
+
+        case .valueAndRangeValues:
+            self.componentWithValueAndRangeValues(
+                configuration: configuration,
+                step: step
+            )
 
         case .allValues:
-            if let step {
-                SparkSlider(
-                    value: self.$value,
-                    in: 0...1,
-                    step: step,
-                    valueText: "Current",
-                    minValueText: "Min",
-                    maxValueText: "Max"
-                )
-            } else {
-                SparkSlider(
-                    value: self.$value,
-                    in: 0...1,
-                    valueText: "Current",
-                    minValueText: "Min",
-                    maxValueText: "Max"
-                )
-            }
+            self.componentWithAllValues(
+                configuration: configuration,
+                step: step
+            )
+        }
+    }
 
-        case .otherAllValues:
-            if let step {
-                SparkSlider(
-                    value: self.$value,
-                    in: 0...1,
-                    step: step,
-                    valueLabel: {
-                        OtherContentView(value: self.value)
-                    },
-                    minValueLabel: {
-                        OtherContentView(value: 0)
-                    },
-                    maxValueLabel: {
-                        OtherContentView(value: 100)
-                    }
-                )
-            } else {
-                SparkSlider(
-                    value: self.$value,
-                    in: 0...1,
-                    valueLabel: {
-                        OtherContentView(value: self.value)
-                    },
-                    minValueLabel: {
-                        OtherContentView(value: 0)
-                    },
-                    maxValueLabel: {
-                        OtherContentView(value: 100)
-                    }
-                )
-            }
+    @ViewBuilder
+    private func componentWithoutValues(
+        configuration: SliderConfigurationSnapshotTests,
+        step: Double?
+    ) -> some View {
+
+        if let step {
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                step: step
+            )
+        } else {
+            SparkSlider(
+                value: self.$value,
+                in: 0...1
+            )
+        }
+    }
+
+    @ViewBuilder
+    private func componentWithTitle(
+        configuration: SliderConfigurationSnapshotTests,
+        step: Double?
+    ) -> some View {
+        let text = "Title"
+
+        switch (configuration.contentType, step) {
+        case (.text, let step?):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                step: step,
+                title: text
+            )
+        case (.text, nil):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                title: text
+            )
+
+        case (.custom, let step?):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                step: step,
+                titleLabel: {
+                    OtherContentView(text: text)
+                }
+            )
+
+        case (.custom, nil):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                titleLabel: {
+                    OtherContentView(text: text)
+                }
+            )
+        }
+    }
+
+    @ViewBuilder
+    private func componentWithValue(
+        configuration: SliderConfigurationSnapshotTests,
+        step: Double?
+    ) -> some View {
+        let text = "50%"
+
+        switch (configuration.contentType, step) {
+        case (.text, let step?):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                step: step,
+                valueText: text
+            )
+        case (.text, nil):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                valueText: text
+            )
+
+        case (.custom, let step?):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                step: step,
+                valueLabel: {
+                    OtherContentView(text: text)
+                }
+            )
+
+        case (.custom, nil):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                valueLabel: {
+                    OtherContentView(text: text)
+                }
+            )
+        }
+    }
+
+    @ViewBuilder
+    private func componentWithRangeValues(
+        configuration: SliderConfigurationSnapshotTests,
+        step: Double?
+    ) -> some View {
+        let minText = "Min"
+        let maxText = "Max"
+
+        switch (configuration.contentType, step) {
+        case (.text, let step?):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                step: step,
+                minValueText: minText,
+                maxValueText: maxText
+            )
+
+        case (.text, nil):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                minValueText: minText,
+                maxValueText: maxText
+            )
+
+        case (.custom, let step?):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                step: step,
+                minValueLabel: {
+                    OtherContentView(text: minText)
+                },
+                maxValueLabel: {
+                    OtherContentView(text: maxText)
+                }
+            )
+
+        case (.custom, nil):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                minValueLabel: {
+                    OtherContentView(text: minText)
+                },
+                maxValueLabel: {
+                    OtherContentView(text: maxText)
+                }
+            )
+        }
+    }
+
+    @ViewBuilder
+    private func componentWithTitleAndValue(
+        configuration: SliderConfigurationSnapshotTests,
+        step: Double?
+    ) -> some View {
+        let title = "Title"
+        let value = "50%"
+
+        switch (configuration.contentType, step) {
+        case (.text, let step?):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                step: step,
+                title: title,
+                valueText: value
+            )
+
+        case (.text, nil):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                title: title,
+                valueText: value
+            )
+
+        case (.custom, let step?):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                step: step,
+                titleLabel: {
+                    OtherContentView(text: title)
+                },
+                valueLabel: {
+                    OtherContentView(text: value)
+                }
+            )
+
+        case (.custom, nil):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                titleLabel: {
+                    OtherContentView(text: title)
+                },
+                valueLabel: {
+                    OtherContentView(text: value)
+                }
+            )
+        }
+    }
+
+    @ViewBuilder
+    private func componentWithTitleAndRangeValues(
+        configuration: SliderConfigurationSnapshotTests,
+        step: Double?
+    ) -> some View {
+        let title = "Title"
+        let minText = "Min"
+        let maxText = "Max"
+
+        switch (configuration.contentType, step) {
+        case (.text, let step?):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                step: step,
+                title: title,
+                minValueText: minText,
+                maxValueText: maxText
+            )
+
+        case (.text, nil):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                title: title,
+                minValueText: minText,
+                maxValueText: maxText
+            )
+
+        case (.custom, let step?):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                step: step,
+                titleLabel: {
+                    OtherContentView(text: title)
+                },
+                minValueLabel: {
+                    OtherContentView(text: minText)
+                },
+                maxValueLabel: {
+                    OtherContentView(text: maxText)
+                }
+            )
+
+        case (.custom, nil):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                titleLabel: {
+                    OtherContentView(text: title)
+                },
+                minValueLabel: {
+                    OtherContentView(text: minText)
+                },
+                maxValueLabel: {
+                    OtherContentView(text: maxText)
+                }
+            )
+        }
+    }
+
+    @ViewBuilder
+    private func componentWithValueAndRangeValues(
+        configuration: SliderConfigurationSnapshotTests,
+        step: Double?
+    ) -> some View {
+        let value = "50%"
+        let minText = "Min"
+        let maxText = "Max"
+
+        switch (configuration.contentType, step) {
+        case (.text, let step?):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                step: step,
+                valueText: value,
+                minValueText: minText,
+                maxValueText: maxText
+            )
+
+        case (.text, nil):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                valueText: value,
+                minValueText: minText,
+                maxValueText: maxText
+            )
+
+        case (.custom, let step?):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                step: step,
+                valueLabel: {
+                    OtherContentView(text: value)
+                },
+                minValueLabel: {
+                    OtherContentView(text: minText)
+                },
+                maxValueLabel: {
+                    OtherContentView(text: maxText)
+                }
+            )
+
+        case (.custom, nil):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                valueLabel: {
+                    OtherContentView(text: value)
+                },
+                minValueLabel: {
+                    OtherContentView(text: minText)
+                },
+                maxValueLabel: {
+                    OtherContentView(text: maxText)
+                }
+            )
+        }
+    }
+
+    @ViewBuilder
+    private func componentWithAllValues(
+        configuration: SliderConfigurationSnapshotTests,
+        step: Double?
+    ) -> some View {
+        let title = "Title"
+        let value = "50%"
+        let minText = "Min"
+        let maxText = "Max"
+
+        switch (configuration.contentType, step) {
+        case (.text, let step?):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                step: step,
+                title: title,
+                valueText: value,
+                minValueText: minText,
+                maxValueText: maxText
+            )
+
+        case (.text, nil):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                title: title,
+                valueText: value,
+                minValueText: minText,
+                maxValueText: maxText
+            )
+
+        case (.custom, let step?):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                step: step,
+                titleLabel: {
+                    OtherContentView(text: title)
+                },
+                valueLabel: {
+                    OtherContentView(text: value)
+                },
+                minValueLabel: {
+                    OtherContentView(text: minText)
+                },
+                maxValueLabel: {
+                    OtherContentView(text: maxText)
+                }
+            )
+
+        case (.custom, nil):
+            SparkSlider(
+                value: self.$value,
+                in: 0...1,
+                titleLabel: {
+                    OtherContentView(text: title)
+                },
+                valueLabel: {
+                    OtherContentView(text: value)
+                },
+                minValueLabel: {
+                    OtherContentView(text: minText)
+                },
+                maxValueLabel: {
+                    OtherContentView(text: maxText)
+                }
+            )
         }
     }
 }
 
-struct OtherContentView: View {
-    let value: Double
+// MARK: - Other View
+
+private struct OtherContentView: View {
+    let text: String
     var body: some View {
         HStack {
-            Text("\(Int(self.value * 100))")
-            Text("%")
+            Text(self.text)
+            Text("(%)")
                 .bold()
                 .foregroundColor(.blue)
         }

@@ -8,8 +8,6 @@
 
 import SparkTheming
 
-// TODO: Test
-
 // sourcery: AutoMockable, AutoMockTest
 protocol SliderGetColorsUseCaseable {
     // sourcery: theme = "Identical"

@@ -28,6 +28,7 @@ final class SliderViewModelTests: XCTestCase {
         // THEN
         XCTAssertNil(viewModel.theme)
         XCTAssertNil(viewModel.intent)
+        XCTAssertNil(viewModel.isFloatingValueLabel)
         XCTAssertNil(viewModel.isEnabled)
 
         XCTAssertEqualToExpected(
@@ -87,6 +88,7 @@ final class SliderViewModelTests: XCTestCase {
             stub.getTypographiesUseCaseMock,
             expectedNumberOfCalls: 1,
             givenTheme: stub.givenTheme,
+            givenIsFloatingValueLabel: stub.givenIsFloatingValueLabel,
             expectedReturnValue: stub.expectedTypographies
         )
     }
@@ -136,6 +138,7 @@ final class SliderViewModelTests: XCTestCase {
             stub.getTypographiesUseCaseMock,
             expectedNumberOfCalls: 1,
             givenTheme: newTheme,
+            givenIsFloatingValueLabel: stub.givenIsFloatingValueLabel,
             expectedReturnValue: stub.expectedTypographies
         )
     }
@@ -204,6 +207,38 @@ final class SliderViewModelTests: XCTestCase {
         )
     }
 
+    func test_isFloatingValueLabelChanged_shouldUpdateTypographiesOnly() {
+        // GIVEN
+        let stub = Stub()
+        let viewModel = stub.viewModel
+
+        viewModel.setup(stub: stub)
+        stub.resetMockedData()
+
+        let newIsFloatingValueLabel = true
+
+        // WHEN
+        viewModel.isFloatingValueLabel = newIsFloatingValueLabel
+
+        // THEN
+        XCTAssertEqualToExpected(on: stub)
+
+        SliderGetTypographiesUseCaseableMockTest.XCTAssert(
+            stub.getTypographiesUseCaseMock,
+            expectedNumberOfCalls: 1,
+            givenTheme: stub.givenTheme,
+            givenIsFloatingValueLabel: newIsFloatingValueLabel,
+            expectedReturnValue: stub.expectedTypographies
+        )
+
+        XCTAssertNotCalled(
+            on: stub,
+            getColorsUseCase: true,
+            getDimUseCase: true,
+            getSpacingUseCase: true
+        )
+    }
+
     func test_propertiesChanged_beforeSetup_shouldNotCallUseCases() {
         // GIVEN
         let stub = Stub()
@@ -212,6 +247,7 @@ final class SliderViewModelTests: XCTestCase {
         // WHEN
         viewModel.theme = ThemeGeneratedMock.mocked()
         viewModel.intent = SliderIntent.basic
+        viewModel.isFloatingValueLabel = true
         viewModel.isEnabled = false
 
         // THEN
@@ -243,6 +279,7 @@ final class SliderViewModelTests: XCTestCase {
         // WHEN
         viewModel.theme = stub.givenTheme
         viewModel.intent = stub.givenIntent
+        viewModel.isFloatingValueLabel = stub.givenIsFloatingValueLabel
         viewModel.isEnabled = stub.givenIsEnabled
 
         // THEN
@@ -268,6 +305,7 @@ final class SliderViewModelTests: XCTestCase {
         // WHEN
         viewModel.theme = nil
         viewModel.intent = nil
+        viewModel.isFloatingValueLabel = nil
         viewModel.isEnabled = nil
 
         // THEN
@@ -291,18 +329,21 @@ private final class Stub {
 
     let givenTheme = ThemeGeneratedMock.mocked()
     let givenIntent: SliderIntent = .main
+    let givenIsFloatingValueLabel: Bool = false
     let givenIsEnabled: Bool = true
 
     // MARK: - Expected
 
     let expectedColors = SliderColors(
         tintColorToken: ColorTokenGeneratedMock.random(),
+        titleColorToken: ColorTokenGeneratedMock.random(),
         valueColorToken: ColorTokenGeneratedMock.random(),
         rangeValuesColorToken: ColorTokenGeneratedMock.random()
     )
     let expectedDim: CGFloat = 1.0
     let expectedSpacing: CGFloat = 8.0
     let expectedTypographies = SliderTypographies(
+        titleFontToken: TypographyFontTokenGeneratedMock.body(),
         valueFontToken: TypographyFontTokenGeneratedMock.title(),
         rangeValuesFontToken: TypographyFontTokenGeneratedMock.footnote()
     )
@@ -331,7 +372,7 @@ private final class Stub {
         getSpacingUseCaseMock.executeWithThemeReturnValue = self.expectedSpacing
 
         let getTypographiesUseCaseMock = SliderGetTypographiesUseCaseableGeneratedMock()
-        getTypographiesUseCaseMock.executeWithThemeReturnValue = self.expectedTypographies
+        getTypographiesUseCaseMock.executeWithThemeAndIsFloatingValueLabelReturnValue = self.expectedTypographies
 
         self.viewModel = SliderViewModel(
             getColorsUseCase: getColorsUseCaseMock,
@@ -364,6 +405,7 @@ private extension SliderViewModel {
         self.setup(
             theme: stub.givenTheme,
             intent: stub.givenIntent,
+            isFloatingValueLabel: stub.givenIsFloatingValueLabel,
             isEnabled: stub.givenIsEnabled
         )
     }
@@ -393,7 +435,7 @@ private func XCTAssertNotCalled(
 
     SliderGetTypographiesUseCaseableMockTest.XCTCalled(
         stub.getTypographiesUseCaseMock,
-        executeWithThemeCalled: !getTypographiesUseCase
+        executeWithThemeAndIsFloatingValueLabelCalled: !getTypographiesUseCase
     )
 }
 
