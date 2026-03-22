@@ -15,7 +15,7 @@ final class SliderIntentTests: XCTestCase {
 
     func test_allCases_containsExpectedCases() {
         // GIVEN
-        let expectedCases: [SliderIntent] = [.accent, .basic, .main]
+        let expectedCases: [SliderIntent] = [.accent, .main, .support]
 
         // WHEN / THEN
         XCTAssertEqual(SliderIntent.allCases.count, expectedCases.count)
@@ -24,18 +24,17 @@ final class SliderIntentTests: XCTestCase {
 
     func test_defaultValue_isMain() {
         // GIVEN / WHEN / THEN
-        XCTAssertEqual(SliderIntent.default, .basic)
+        XCTAssertEqual(SliderIntent.default, .support)
     }
 
     func test_allCases_doesNotContainDeprecatedCases() {
         // GIVEN
         let deprecatedCases: [SliderIntent] = [
+            .alert,
+            .error,
             .info,
             .neutral,
-            .support,
-            .success,
-            .error,
-            .alert
+            .success
         ]
 
         // WHEN / THEN
