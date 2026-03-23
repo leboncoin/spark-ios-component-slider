@@ -154,25 +154,6 @@ final class SliderGetColorsUseCaseDeprecatedTests: XCTestCase {
         XCTAssertEqual(colors, expectedColors)
     }
 
-    // MARK: - Support
-    func test_execute_intent_support_enabled() {
-        // GIVEN
-        let useCase = SliderGetColorsUseCaseDeprecated()
-        let expectedColors = SliderColorsDeprecated(
-            track: self.colors.base.onBackground.opacity(self.dims.dim4),
-            indicator: self.colors.support.support,
-            handle: self.colors.support.support,
-            handleActiveIndicator: self.colors.support.supportContainer
-        )
-
-        // WHEN
-        let colors = useCase.execute(theme: self.theme,
-                                     intent: .support)
-
-        // THEN
-        XCTAssertEqual(colors, expectedColors)
-    }
-
     // MARK: - Info
     func test_execute_intent_info_enabled() {
         // GIVEN

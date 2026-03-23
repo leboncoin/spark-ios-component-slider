@@ -75,13 +75,6 @@ final class SliderGetColorsUseCaseDeprecated: SliderGetColorsUseCasableDeprecate
                 handle: colors.feedback.neutral,
                 handleActiveIndicator: colors.feedback.neutralContainer
             )
-        case .support:
-            sliderColors = .init(
-                track: trackColor,
-                indicator: colors.support.support,
-                handle: colors.support.support,
-                handleActiveIndicator: colors.support.supportContainer
-            )
         case .info:
             sliderColors = .init(
                 track: trackColor,
