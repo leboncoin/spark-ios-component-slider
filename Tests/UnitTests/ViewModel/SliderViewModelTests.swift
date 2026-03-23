@@ -246,7 +246,7 @@ final class SliderViewModelTests: XCTestCase {
 
         // WHEN
         viewModel.theme = ThemeGeneratedMock.mocked()
-        viewModel.intent = SliderIntent.basic
+        viewModel.intent = SliderIntent.support
         viewModel.isFloatingValueLabel = true
         viewModel.isEnabled = false
 

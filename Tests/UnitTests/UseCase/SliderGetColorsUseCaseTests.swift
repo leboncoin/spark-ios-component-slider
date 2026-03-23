@@ -40,17 +40,6 @@ final class SliderGetColorsUseCaseTests: XCTestCase {
         XCTAssertTrue(result.rangeValuesColorToken.equals(self.theme.colors.base.onSurface.opacity(self.theme.dims.dim1)))
     }
 
-    func test_execute_basic() {
-        // GIVEN / WHEN
-        let result = self.sut.execute(theme: self.theme, intent: .basic)
-
-        // THEN
-        XCTAssertTrue(result.tintColorToken.equals(self.theme.colors.basic.basic))
-        XCTAssertTrue(result.titleColorToken.equals(self.theme.colors.base.onSurface))
-        XCTAssertTrue(result.valueColorToken.equals(self.theme.colors.base.onSurface))
-        XCTAssertTrue(result.rangeValuesColorToken.equals(self.theme.colors.base.onSurface.opacity(self.theme.dims.dim1)))
-    }
-
     func test_execute_main() {
         // GIVEN / WHEN
         let result = self.sut.execute(theme: self.theme, intent: .main)

@@ -23,17 +23,16 @@ struct SliderGetColorsUseCase: SliderGetColorsUseCaseable {
         let dims = theme.dims
 
         let tintColorToken: any ColorToken = switch intent {
-        case .basic: colors.basic.basic
         case .accent: colors.accent.accent
         case .main: colors.main.main
-        case .neutral: colors.feedback.neutral
         case .support: colors.support.support
-        case .info: colors.feedback.info
 
             // Deprecated cases
-        case .success: colors.feedback.success
-        case .error: colors.feedback.error
         case .alert: colors.feedback.alert
+        case .error: colors.feedback.error
+        case .info: colors.feedback.info
+        case .neutral: colors.feedback.neutral
+        case .success: colors.feedback.success
         }
 
         let textColorToken = colors.base.onSurface
