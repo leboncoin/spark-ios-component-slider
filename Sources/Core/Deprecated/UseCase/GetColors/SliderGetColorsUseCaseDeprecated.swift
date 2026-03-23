@@ -26,12 +26,12 @@ final class SliderGetColorsUseCaseDeprecated: SliderGetColorsUseCasableDeprecate
         let sliderColors: SliderColorsDeprecated
         let trackColor = colors.base.onBackground.opacity(dims.dim4)
         switch intent {
-        case .basic:
+        case .support:
             sliderColors = .init(
                 track: trackColor,
-                indicator: colors.basic.basic,
-                handle: colors.basic.basic,
-                handleActiveIndicator: colors.basic.basicContainer
+                indicator: colors.support.support,
+                handle: colors.support.support,
+                handleActiveIndicator: colors.support.supportContainer
             )
         case .success:
             sliderColors = .init(

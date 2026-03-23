@@ -17,7 +17,7 @@ extension SliderColorsDeprecated {
             track: colors.feedback.alert,
             indicator: colors.accent.accentVariant,
             handle: colors.states.neutralPressed,
-            handleActiveIndicator: colors.basic.onBasicContainer
+            handleActiveIndicator: colors.support.onSupportContainer
         )
     }
 }
