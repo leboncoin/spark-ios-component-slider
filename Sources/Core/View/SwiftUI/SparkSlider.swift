@@ -383,6 +383,7 @@ public struct SparkSlider<TitleLabel, ValueLabel, MinValueLabel, MaxValueLabel, 
             }
         }
         .tint(self.viewModel.colors.tintColorToken)
+        .accessibilityIdentifier(SliderAccessibilityIdentifier.sliderContent)
     }
 
     private func valueStyledLabel() -> some View {
