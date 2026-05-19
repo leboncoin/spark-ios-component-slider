@@ -22,4 +22,9 @@ final class SliderAccessibilityIdentifierTests: XCTestCase {
         // GIVEN / WHEN / THEN
         XCTAssertEqual(SliderAccessibilityIdentifier.slider, "spark-slider")
     }
+
+    func test_sliderContent_hasExpectedValue() {
+        // GIVEN / WHEN / THEN
+        XCTAssertEqual(SliderAccessibilityIdentifier.sliderContent, "spark-slider-content")
+    }
 }

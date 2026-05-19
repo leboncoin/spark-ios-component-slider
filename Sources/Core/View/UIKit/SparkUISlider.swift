@@ -130,7 +130,11 @@ public final class SparkUISlider: UIControl {
         return label
     }()
 
-    private let slider = SteppedSlider()
+    private let slider: SteppedSlider = {
+        let slider = SteppedSlider()
+        slider.accessibilityIdentifier = SliderAccessibilityIdentifier.sliderContent
+        return slider
+    }()
 
     private lazy var rangeValuesStackView: UIStackView = {
         let stackView = UIStackView(
